@@ -1,0 +1,359 @@
+{
+  "archived_results": {
+    "a79": {
+      "active_sequences": 5,
+      "active_sequences_improved": {
+        "e1c": 2,
+        "e1o": 1
+      },
+      "maximum_rmse_delta_m": 9.624745445080407e-11,
+      "targets_met": {
+        "e1c": 2,
+        "e1o": 2
+      },
+      "targets_met_with_gnss_active": 0,
+      "verification": "paired-point aggregate algebra only",
+      "verified_ate_values": 28
+    },
+    "a81": {
+      "checks": [
+        {
+          "channel": "dopp",
+          "d4_pass": true,
+          "dataset": "mars_lvig",
+          "nis_per_dof": 1.0965418139520278
+        },
+        {
+          "channel": "tdcp",
+          "d4_pass": true,
+          "dataset": "mars_lvig",
+          "nis_per_dof": 1.003539864656349
+        },
+        {
+          "channel": "dopp",
+          "d4_pass": false,
+          "dataset": "smartpnt_mini",
+          "nis_per_dof": 1.2985784051776035
+        },
+        {
+          "channel": "tdcp",
+          "d4_pass": true,
+          "dataset": "smartpnt_mini",
+          "nis_per_dof": 0.9760937567354792
+        }
+      ],
+      "final_evaluation_run": false,
+      "frozen_configuration_exists": false,
+      "research_gate": "FAIL (expected recorded outcome)",
+      "verification": "recorded NIS/dof aggregates only"
+    }
+  },
+  "command": "bash scripts/check_preview.sh",
+  "core": {
+    "case_totals": {
+      "disabled": 0,
+      "failures": 0,
+      "passed": 161,
+      "skipped": 98,
+      "tests": 259
+    },
+    "ctest_executables": 21,
+    "ctest_executables_passed": 21,
+    "executables": [
+      {
+        "cases": 49,
+        "executable": "test_livgo",
+        "failures": 0,
+        "passed": 49,
+        "skipped": 0
+      },
+      {
+        "cases": 14,
+        "executable": "test_p3_facade",
+        "failures": 0,
+        "passed": 1,
+        "skipped": 13
+      },
+      {
+        "cases": 22,
+        "executable": "test_t01_t05_io",
+        "failures": 0,
+        "passed": 3,
+        "skipped": 19
+      },
+      {
+        "cases": 12,
+        "executable": "test_u01_time",
+        "failures": 0,
+        "passed": 12,
+        "skipped": 0
+      },
+      {
+        "cases": 9,
+        "executable": "test_u02_wire",
+        "failures": 0,
+        "passed": 5,
+        "skipped": 4
+      },
+      {
+        "cases": 14,
+        "executable": "test_u03_satmap",
+        "failures": 0,
+        "passed": 5,
+        "skipped": 9
+      },
+      {
+        "cases": 8,
+        "executable": "test_u04_satstate",
+        "failures": 0,
+        "passed": 1,
+        "skipped": 7
+      },
+      {
+        "cases": 11,
+        "executable": "test_u05_corrections",
+        "failures": 0,
+        "passed": 2,
+        "skipped": 9
+      },
+      {
+        "cases": 4,
+        "executable": "test_u06_paths",
+        "failures": 0,
+        "passed": 0,
+        "skipped": 4
+      },
+      {
+        "cases": 15,
+        "executable": "test_u07_jacobians",
+        "failures": 0,
+        "passed": 13,
+        "skipped": 2
+      },
+      {
+        "cases": 7,
+        "executable": "test_u08_hooks",
+        "failures": 0,
+        "passed": 7,
+        "skipped": 0
+      },
+      {
+        "cases": 10,
+        "executable": "test_u09_augblock",
+        "failures": 0,
+        "passed": 10,
+        "skipped": 0
+      },
+      {
+        "cases": 13,
+        "executable": "test_u10_updater",
+        "failures": 0,
+        "passed": 13,
+        "skipped": 0
+      },
+      {
+        "cases": 2,
+        "executable": "test_u11_tdcp",
+        "failures": 0,
+        "passed": 2,
+        "skipped": 0
+      },
+      {
+        "cases": 10,
+        "executable": "test_u12_gating",
+        "failures": 0,
+        "passed": 9,
+        "skipped": 1
+      },
+      {
+        "cases": 11,
+        "executable": "test_u13_init",
+        "failures": 0,
+        "passed": 1,
+        "skipped": 10
+      },
+      {
+        "cases": 5,
+        "executable": "test_u14_bridge",
+        "failures": 0,
+        "passed": 5,
+        "skipped": 0
+      },
+      {
+        "cases": 19,
+        "executable": "test_u15_mc",
+        "failures": 0,
+        "passed": 0,
+        "skipped": 19
+      },
+      {
+        "cases": 7,
+        "executable": "test_u16_gnss_only",
+        "failures": 0,
+        "passed": 6,
+        "skipped": 1
+      },
+      {
+        "cases": 8,
+        "executable": "test_u17_integrity",
+        "failures": 0,
+        "passed": 8,
+        "skipped": 0
+      },
+      {
+        "cases": 9,
+        "executable": "test_wpf_serialisation",
+        "failures": 0,
+        "passed": 9,
+        "skipped": 0
+      }
+    ],
+    "fixture_handling": "14 originally unconditional wire cases now explicitly skip only when excluded fixture directories are absent; original assertions remain active when supplied.",
+    "skip_categories": {
+      "archived_raw_or_broadcast_fixture_not_distributed": 80,
+      "external_pinned_broadcast_snippet_not_available": 16,
+      "optional_external_trajectory_replay_not_requested": 1,
+      "optional_study_mode_disabled": 1
+    }
+  },
+  "environment": {
+    "architecture": "x86_64",
+    "build_type": "Release",
+    "cmake": "3.28.3",
+    "compile_jobs": 2,
+    "compiler": "GCC 13.3.0",
+    "eigen": "3.4.0",
+    "gtest": "1.14.0",
+    "native_cpu_instructions": true,
+    "os": "Ubuntu 24.04.3 LTS",
+    "python": "3.11.15",
+    "python_environment": "new virtual environment; no system site packages",
+    "python_packages": {
+      "PyYAML": "6.0.3",
+      "apsw": "3.54.0.0",
+      "lz4": "4.4.5",
+      "numpy": "1.26.4",
+      "opencv-python-headless": "4.10.0.84",
+      "rosbags": "0.11.1",
+      "ruamel.yaml": "0.19.1",
+      "scipy": "1.17.1",
+      "typing_extensions": "4.16.0",
+      "zstandard": "0.25.0"
+    },
+    "strict_fp": true,
+    "test_jobs": 1
+  },
+  "historical_delivery_counts": {
+    "ctest_executables_passed": 21,
+    "current_public_run": false,
+    "note": "Historical delivery environment and data differed. Public checks add 13 livgo comparison/recovery cases and omit private fixtures and ROS integration dependencies.",
+    "python_passed": 482,
+    "python_skipped": 6
+  },
+  "outcome": "PASS",
+  "portability": "Synthetic values/hashes describe the recorded compiler/CPU run. Different machines may differ numerically; score_demo.py validates C++/NumPy agreement locally. CI regenerates and exposes individual skip reasons.",
+  "python": {
+    "optional_7z_available": true,
+    "skip_categories": {
+      "external_M3DGR_reference_bag_not_available": 1,
+      "external_official_checksums_file_not_available": 1,
+      "external_paper_text_copy_not_available": 1,
+      "optional_ROS_Python_not_available": 8,
+      "optional_evo_not_available": 2
+    },
+    "suites": [
+      {
+        "errors": 0,
+        "failures": 0,
+        "passed": 151,
+        "skipped": 8,
+        "suite": "tools/tests",
+        "tests": 159
+      },
+      {
+        "errors": 0,
+        "failures": 0,
+        "passed": 79,
+        "skipped": 0,
+        "suite": "tools/calib/tests",
+        "tests": 79
+      },
+      {
+        "errors": 0,
+        "failures": 0,
+        "passed": 89,
+        "skipped": 1,
+        "suite": "tools/datasets/tests",
+        "tests": 90
+      },
+      {
+        "errors": 0,
+        "failures": 0,
+        "passed": 156,
+        "skipped": 4,
+        "suite": "tools/eval/tests",
+        "tests": 160
+      },
+      {
+        "errors": 0,
+        "failures": 0,
+        "passed": 13,
+        "skipped": 0,
+        "suite": "tools/eval/livgo",
+        "tests": 13
+      }
+    ],
+    "totals": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 488,
+      "skipped": 13,
+      "tests": 501
+    }
+  },
+  "schema": "fastlivo.gnss.preview.validation.v1",
+  "scope": "ROS-free software checks, invented GNSS activation example and archived aggregate verification. No new sensor replay or real-data performance validation.",
+  "source_delivery_commit": "696d38d966b6a32b4901bf0aeb884d9778e834ca",
+  "synthetic_example": {
+    "accepted_rows": {
+      "dopp": 4616,
+      "psr": 569,
+      "tdcp": 1153
+    },
+    "activation_s": 15.099999904632568,
+    "ate_rmse_m": {
+      "global": 0.27064889175015816,
+      "host": 0.07345645167937555,
+      "odometry": 0.026393525581665855
+    },
+    "input_sha256": {
+      "config.txt": "4fd0e29938be83bae8573da09a3ee2cf9c86bdede2e5d0d9408751b58c180c20",
+      "global.tum": "8410c693bb2ccab5e661f3d6af04fa7b59bf061d275063a90f108f00c40ee355",
+      "host.tum": "53a0256d0361fa429214fd2b8f119cf862cd4bcdc98c777aa5febff925f5757d",
+      "odometry.tum": "44b0b1d84ef5eb972218870383fdf9ca7e6d00752a51a23e2466f003bda839fa",
+      "summary.json": "12555ce1597d23e8c40d0ed98a5593037268c6078408a0b8207171621ba09ad1",
+      "synthetic.nav": "e43641afb22485fbb62eb24b566213c24dc2fd589baa51a1e4dc18ec6305d7a8",
+      "truth.tum": "65a54ead659284ae3a63f22fa32fdd9c12c9d2711ae4f1a69785e322e43b2b9b"
+    },
+    "metric": "antenna position ATE RMSE; SE(3) rigid alignment; no scale",
+    "samples": 82,
+    "sampling": "same timestamps, from activation + 5 s, 1 Hz",
+    "schema": "fastlivo.gnss.preview.score.v1",
+    "synthetic_only": true
+  },
+  "validated_files_sha256": {
+    ".github/workflows/preview.yml": "e1142c32e58df8725b8bfb6d01b68b76add4045e988c950324c577a6f8a5493d",
+    "gnss_io/test/test_t01_t05_io.cpp": "365ac925be5151dd50f86ba8d04588c391349eb9c266996befc2cad74a8f22e7",
+    "gnss_io/test/test_u02_wire.cpp": "2a2473066aadc4a5ec92cec1c45126730fb8ccd2cc1193af994f6d87caf01456",
+    "requirements-preview.txt": "6b082da4e46b599cec4562a160110b2a3b191d0166c04fd7e684706233bedaf6",
+    "scripts/check_preview.sh": "21a887efe4bc80fe1baa51233a1aa6729d4618ec237fcbc26e7191569fd77eef",
+    "tools/preview/CMakeLists.txt": "ed7f413bdb959263613077f4b263ba55905090561466a93ec8301b2762b53977",
+    "tools/preview/demo.cpp": "0735bdffa31ea8aa3a332e4db26c82dd43c57ad2435df490e36a3c31f90475f7",
+    "tools/preview/make_nav.py": "a7171a3fafb23014f2fac4d7d1120e0a6103858073a83e778f2f824123f8b7f0",
+    "tools/preview/recompute_results.py": "0789ea3c3d5a4dd9ade1f7e6b62fa77e2d9548343c0fb1e27b563034b388bce2",
+    "tools/preview/run_python_tests.py": "7eb38cd1d8ad4fc111eb7627197c701e61ede5b2daa9a8448ae0c1c5eb29c803",
+    "tools/preview/score_demo.py": "9aa53f7907d3c91c578ca1cb1db662d904773489ee536b59b49d1ec2a071e383",
+    "tools/preview/summarize_core.py": "acfa40023e4ff758447a0d43595a773210f0c3f9b6f307eac4778a0a1ea56639"
+  },
+  "validated_utc": "2026-10-13T13:13:02.381347+00:00"
+}

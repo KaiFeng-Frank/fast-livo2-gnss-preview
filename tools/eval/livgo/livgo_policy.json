@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "created_utc": "2026-09-26T19:37:41.071118+00:00",
+  "user_direction": "目标是livgo，只是livo2没伤害那是不够的",
+  "paper": "FAST-LIVGO arXiv:2606.19190v2, Table II",
+  "paper_url": "https://arxiv.org/html/2606.19190v2",
+  "local_paper_sha256": "304862c66770132237b9ab6dfc353ca795b01b1498f10ff5b517a84c4b5adb35",
+  "targets_m": {
+    "Varying-illu03": 0.23,
+    "Varying-illu04": 0.19,
+    "Varying-illu05": 0.09,
+    "Outdoor01": 0.11,
+    "Outdoor04": 0.13,
+    "Dark01": 0.34,
+    "Dark02": 0.27
+  },
+  "metric": "e1o",
+  "alignment": "SE(3) Umeyama, no scale",
+  "t_max_diff_s": 0.05,
+  "screen_seeds": [
+    0
+  ],
+  "confirmation_seeds": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "main_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "comparison_arms": [
+    "U",
+    "T"
+  ],
+  "tolerance_m": 0.0,
+  "target_rule": "Each of the seven T odometry ATE medians must be <= the published FAST-LIVGO value; no pooled average or LIVO2 non-harm substitute. Literal rounded paper thresholds, fixed before evaluation.",
+  "extra_comparison_arms": [
+    "L-PVT",
+    "T-pr",
+    "T-dop",
+    "T-tdcp"
+  ],
+  "expand_only_after": "All seven five-seed main-table targets and instrument checks pass.",
+  "auxiliary_aruco": "Defer GNSS-denial01/02 replays until the missing E5 endpoint evaluator exists; never call their replay completion an ATE result.",
+  "evaluation_guard": "Use frozen build/configuration; no parameter changes or sequence/seed selection from evaluation results.",
+  "claim_limit": "Paper-number target match; FAST-LIVGO has not been reproduced in the same environment. GT masks, Outdoor01 repair gap, and upstream baseline differences must remain disclosed."
+}

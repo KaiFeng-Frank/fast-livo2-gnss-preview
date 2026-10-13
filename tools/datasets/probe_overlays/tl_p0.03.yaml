@@ -1,0 +1,5 @@
+# probe overlay: LiDAR time offset 0.03 s (added to the LiDAR stamps by the host); the LiDAR-IMU clock sweep
+time_offset:
+  lidar_time_offset: 0.03
+  img_time_offset: 0.0310331028
+  imu_time_offset: 0.0

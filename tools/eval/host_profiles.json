@@ -1,0 +1,44 @@
+{
+  "_doc": [
+    "Named host profiles for tools/eval/run_matrix.py --profile.",
+    "The program defaults stay the remote host's (sudo -n docker, jobs 3, MemAvailable gate 16 GiB,",
+    "per-container limit 16 GiB, brake 6 GiB, docker user 1000:1000, disk gate 8 GiB on the project root).",
+    "A profile replaces a default only when that flag is absent from the command line.",
+    "docker_user \"host\" is the uid:gid of the process running run_matrix.py.",
+    "extra_disk entries are additional launch gates PATH=GiB (the root filesystem of this machine, not the SSD).",
+    "local-dev: development set. Grass01 T-arm peak RSS is about 8 GiB, so two replays fit when MemAvailable",
+    "stays ahead of the next container. The limit is 10 GiB (the measured peak plus headroom, so a legitimate",
+    "run is not killed by its cgroup). The brake at 2.5 GiB is the backstop if two replays ramp together on a",
+    "tighter machine. Z-Rough-Road01 is longer than Grass01; its peak was not re-measured here — if a run dies",
+    "at the cgroup limit, drop to --jobs 1 or raise --mem-limit-gb after reading peak_rss_gib.",
+    "local-eval: evaluation set, Varying-illu03 peak 20.45 GiB. One replay, limit 22 GiB, launch only while",
+    "MemAvailable is at least 21.5 GiB, brake at 1 GiB so the legitimate peak (which leaves little free) is not",
+    "treated as a runaway. This is close to a 30.5 GiB machine; do not start it while another multi-GiB job is up."
+  ],
+  "profiles": {
+    "local-dev": {
+      "docker_cmd": "docker",
+      "docker_user": "host",
+      "jobs": 2,
+      "min_avail_gb": 10.0,
+      "brake_avail_gb": 2.5,
+      "mem_limit_gb": 10.0,
+      "oom_score_adj": 1000,
+      "cpus": 4,
+      "min_free_disk_gb": 8.0,
+      "extra_disk": ["/=5"]
+    },
+    "local-eval": {
+      "docker_cmd": "docker",
+      "docker_user": "host",
+      "jobs": 1,
+      "min_avail_gb": 21.5,
+      "brake_avail_gb": 1.0,
+      "mem_limit_gb": 22.0,
+      "oom_score_adj": 1000,
+      "cpus": 4,
+      "min_free_disk_gb": 8.0,
+      "extra_disk": ["/=5"]
+    }
+  }
+}

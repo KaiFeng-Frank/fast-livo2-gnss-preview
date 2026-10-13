@@ -1,0 +1,18 @@
+# SmartPNT mini platform camera cam00 (MER-131, global shutter, 1280x1024), from the Kalibr camera-IMU calibration of the
+# dataset (03_config/cam_calibration/extrinsic_parameters/camchain-imucam-2024-06-26-02-19-12_0.yaml, pinhole + radtan,
+# /cam00/image_raw with /imu_raw). The intrinsics are those of the RAW 1280x1024 image; scale 0.5 makes the host process
+# 640x512, which is exactly the size of the slim bag's images (tools/datasets/smartpnt/slim.py shrinks them with the
+# host's own cv::resize INTER_LINEAR), so the host does not resize again. Loaded into /laserMapping (vikit camera_loader).
+# Not used: 03_config/mini_cam00.yaml (a VINS file for /cam1 with other intrinsics; its extrinsic does not match the Kalibr chain).
+cam_model: Pinhole
+cam_width: 1280
+cam_height: 1024
+scale: 0.5
+cam_fx: 764.6113
+cam_fy: 764.4725
+cam_cx: 656.8556
+cam_cy: 519.2676
+cam_d0: -0.3326
+cam_d1: 0.1242
+cam_d2: 0.00028155
+cam_d3: 8.7935e-05

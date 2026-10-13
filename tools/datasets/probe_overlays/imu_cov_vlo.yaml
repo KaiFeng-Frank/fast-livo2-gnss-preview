@@ -1,0 +1,4 @@
+# probe overlay: IMU process noise 100x lower than the upstream defaults
+imu:
+  acc_cov: 0.005
+  gyr_cov: 0.003

@@ -1,0 +1,355 @@
+{
+  "schema": "fastlivo-gnss.a79-public-summary.v1",
+  "recorded_date": "2026-10-02",
+  "result_kind": "historical_single_seed_benchmark",
+  "dataset": "M3DGR",
+  "host_lidar": "mid360",
+  "seed": 0,
+  "interpretation": "2/7 meet the reported paper targets; both are GNSS-inactive T=U. Of the five active sequences, e1c improves on two and worsens on three; e1o improves only on Outdoor01. No stable multi-sequence gain or FAST-LIVGO replication established.",
+  "paper_reference": {
+    "title": "FAST-LIVGO",
+    "url": "https://arxiv.org/abs/2606.19190",
+    "version": "v2",
+    "table": "II",
+    "numbers_are_cited_not_recomputed": true,
+    "same_environment_replication": false
+  },
+  "metric": {
+    "alignment": "SE(3) Umeyama, no scale",
+    "association_max_diff_s": 0.05,
+    "e1o": "T: traj_N_odom with activation-frame fill before activation; U: traj_W; compare IMU position directly with GT antenna position.",
+    "e1c": "Same output/span/association/mask as e1o, transform the estimate to the GT antenna point by p+R*l before the rigid fit.",
+    "fixed_gt_antenna_lever_imu_m": [
+      -0.01999096558,
+      -0.1534376595,
+      -0.04942328067
+    ],
+    "lever_fit_inputs": "MID-360 U on development Grass01/Grass02, five seeds each; horizontal components fit, vertical held from calibration chain (A77).",
+    "gt": "Stable time sort, duplicate timestamps removed; registered clock shift applied; GT exclusion stretches applied to GT and estimates. All seven A79 spans exclude zero GT rows."
+  },
+  "protocol": {
+    "evaluation_split_uses_to_date": 4,
+    "T_seed_count": 1,
+    "parameter_adjustments_after_final_run": false,
+    "additional_seeds_released": false,
+    "registered_development_gate_deviation": "The final run proceeded although Grass01 e1c T-U was +11.2 mm against a +10 mm limit and Grass02 TDCP white-equivalent NIS/dof was 0.721 below 0.8.",
+    "build_identity_gate": "A55 FAIL: U and T have different build hashes; I11 preactivation traj_W matches byte for byte on all seven sequences, and Dark01/02 whole host outputs match."
+  },
+  "historical_provenance": {
+    "U_runtime_source_commit": "72a2633ce91af2eb577acdd484725182e116d313",
+    "T_runtime_source_commit": "ef08068f9c05e08b64db7aa1fc616015fc3cae43",
+    "config_record_commit": "d5fdab5f1e5420ed2e29573a13639300723ace41",
+    "scoring_tool_source_commit": "ed60a742d8992c5c51f58eb76520ba034cd44b8a",
+    "U_build_sha256": "741145f12da0b8947526ee2ba8553330df06e76006709e6050a25a15ddc5de17",
+    "T_build_sha256": "80eac0fa064e4ca653940c77fde58c003c211773ac6e0208bd39b4d71e8e9d99",
+    "U_runtime_config_sha256": "13b08961649f786e8fe49e37c2f707cde0a52f9830d76adc840bc751d3cb0390",
+    "T_runtime_config_sha256": "7c31c43ea47cbd9e94ce339c4fb57d75b5cd56670f2c478a64b46acfc8053ba0",
+    "base_and_overlay_snapshots": [
+      {
+        "path": "results/a79-configs/m3dgr_mid360.yaml",
+        "sha256": "b06f05d19acf53cdf1b9c3f32dd65a643cf35529852afb04260fe23aa20d156c",
+        "historical_path": "config/m3dgr_mid360.yaml"
+      },
+      {
+        "path": "results/a79-configs/T.yaml",
+        "sha256": "e4470240692813005fb88f5af54a9b71e87670e880a6c0d7d568e84e3155a132",
+        "historical_path": "config/arms/T.yaml"
+      }
+    ],
+    "original_ate_json_sha256": "669c0d083a402f5c44bfc9027fc1e12c469776799f9075646c283e9d86ead009",
+    "note": "These are archived experiment identities, distinct from the source tag of this public preview. Configuration hashes exclude paths, sequence name and seed as recorded in the original runner."
+  },
+  "release_validation": {
+    "date": "2026-10-13",
+    "method": "Independent NumPy quaternion/activation assembly, nearest-time pairing and rigid fit of the locally archived raw W/N_odom and GT, without project metric imports. No new replays or parameter changes.",
+    "maximum_abs_error_from_archived_ate_m": 1.970701379860884e-12
+  },
+  "sequences": [
+    {
+      "sequence": "Varying-illu03",
+      "paper_fast_livo2_m": 1.44,
+      "paper_fast_livgo_target_m": 0.23,
+      "scoring_span_estimator_time_s": [
+        1736776053.0768516,
+        1736777080.1902308
+      ],
+      "scoring_duration_s": 1027.113379240036,
+      "gt_timebase": {
+        "method": "record_time",
+        "applied_shift_s": 0.021956682205200195,
+        "confidence": "medium"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 12.700566291809082,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "3bf368a6e95176ff90f6bacca17850582dac6258fc2d35904038b1c2b5534e17",
+      "original_run_manifest_sha256": {
+        "U": "5cb76abb9f01f4df4013b44b54510990a26c098862cba575038848a4f576c3bb",
+        "T": "4570c721c23108cdb579b9e696e442be38dfb71cf79022052591290152ba558c"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "6ef45b959a66827b4e116f4bb7494aa624e84985f5a784a1e098849f8cb742bb",
+        "T_traj_W": "126bad510875d7ca3d75473f7c475cf3d88db67f2cc381f7d5cb0ca082eaafd0",
+        "T_traj_N_odom": "97c145879fb526ae0bcb009ae833c13bbe424444daf4d43a6fd0652a0d416483"
+      },
+      "ground_truth_clean_sha256": "06f4687eb46723d0af0476528e27a0e215ae43907b3bad484f1c3afd1db70b08",
+      "U": {
+        "e1o_m": 1.72136270816144,
+        "e1c_m": 1.7148140211287328
+      },
+      "T": {
+        "e1o_m": 2.3041537591035506,
+        "e1c_m": 2.274239005043383
+      },
+      "paper_target_met_e1c": false,
+      "paper_target_met_e1o": false
+    },
+    {
+      "sequence": "Varying-illu04",
+      "paper_fast_livo2_m": 0.35,
+      "paper_fast_livgo_target_m": 0.19,
+      "scoring_span_estimator_time_s": [
+        1736777200.458948,
+        1736777868.2950432
+      ],
+      "scoring_duration_s": 667.8360953330994,
+      "gt_timebase": {
+        "method": "record_time",
+        "applied_shift_s": 0.024525880813598633,
+        "confidence": "medium"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 11.93430781364441,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "a102b9c401bd64da2b0c431a0ce3b32db7124601de9d40f42df625e6d985951c",
+      "original_run_manifest_sha256": {
+        "U": "1167559a482bea3343309a52ba7610b54fa2e59deecf9740f5de36e2c9ab4e20",
+        "T": "417ab5c53bd85efdde4ea6de4f87752b5bb8b844c71633c5a3e75bf8b95d2a76"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "27b0f2d7fd90ca6e94b3db65a5267844e93936e470ccc94cbe54a2c7bdf7cd78",
+        "T_traj_W": "b13399954626b2fac37ed32fd97d267ca986ffd3092c3dda352ffd8d0f002353",
+        "T_traj_N_odom": "e8db8411f2bdc5850649023901f3bf913e834749f43c480323359dea5f00ece6"
+      },
+      "ground_truth_clean_sha256": "8a7ab71869234ceddd66653334221fa1d0dfc81f47f4fd94d84957e1acc545d8",
+      "U": {
+        "e1o_m": 0.3544155973863233,
+        "e1c_m": 0.35321467445157867
+      },
+      "T": {
+        "e1o_m": 0.40724431721418486,
+        "e1c_m": 0.38166691925636054
+      },
+      "paper_target_met_e1c": false,
+      "paper_target_met_e1o": false
+    },
+    {
+      "sequence": "Varying-illu05",
+      "paper_fast_livo2_m": 0.16,
+      "paper_fast_livgo_target_m": 0.09,
+      "scoring_span_estimator_time_s": [
+        1736777963.0553083,
+        1736778454.174332
+      ],
+      "scoring_duration_s": 491.11902356147766,
+      "gt_timebase": {
+        "method": "record_time",
+        "applied_shift_s": 0.02566349506378174,
+        "confidence": "medium"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 32.42821669578552,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "ec534855dfbf5e45b5aeb7aedb7851f0644004b783b9c5045807868b723d4c71",
+      "original_run_manifest_sha256": {
+        "U": "3d268d37394e7309715b708326ed99ab2d965768b73e1311f047fdffc0c5dc2f",
+        "T": "2561fd112755e0f2a82f483bf26e57fe2f0cebe3f0b1e8e35e3df90160105998"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "646cd6b5f3d1f00e34346923e3b363bfd42d497445a47c55e8cf1fb4dd0c999d",
+        "T_traj_W": "0c44ff4335bd40f0798a8f26a02bd2de93d18e8bb703223546eefe305e95cf17",
+        "T_traj_N_odom": "c79d1a0e3d1196abc02b5d6b33256a7849992bcd3d2233277ed9526eaa255041"
+      },
+      "ground_truth_clean_sha256": "2bb1e74a4d1c3e68abba6ef49748c6266e3fb7766c207fcec18fac2ee339c947",
+      "U": {
+        "e1o_m": 0.24996994843224568,
+        "e1c_m": 0.29572438145525615
+      },
+      "T": {
+        "e1o_m": 0.29966574251332817,
+        "e1c_m": 0.22380275039046604
+      },
+      "paper_target_met_e1c": false,
+      "paper_target_met_e1o": false
+    },
+    {
+      "sequence": "Outdoor01",
+      "paper_fast_livo2_m": 0.27,
+      "paper_fast_livgo_target_m": 0.11,
+      "scoring_span_estimator_time_s": [
+        1735888008.025583,
+        1735888419.4354281
+      ],
+      "scoring_duration_s": 411.4098451137543,
+      "gt_timebase": {
+        "method": "chain",
+        "applied_shift_s": -0.03162284581502706,
+        "confidence": "chain_checked"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 17.3231143951416,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "67640b809da62ebf878ca2969f51040742acfae133831a685b0860f610b5a1b5",
+      "original_run_manifest_sha256": {
+        "U": "42d24f2e39b551ec54c9cd0e6af8f237e39b27c02aac3402cf415e273dd81242",
+        "T": "1dc6f3f1723135fe21ead1b6f37bd9aaab3965127aec35dea20d0113effb605d"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "0868dc97461f8af3069faa6ba5bbc54048d07dec522cca2b9f98453a32a7f736",
+        "T_traj_W": "a28216bfca55a88bf51d5ba78b57db32bdcc5a88e3fd2ceb8e16a7d06d2a347b",
+        "T_traj_N_odom": "99fcbaa18d7b1b213e77a1b17d4c6afa841d14a0501e3fbc5b3b00a8b7926758"
+      },
+      "ground_truth_clean_sha256": "7e41b85eb81d7c31812f2c5cc551ce3bc232d992b3f31679e6739c3fc63768e6",
+      "U": {
+        "e1o_m": 0.28491545729695167,
+        "e1c_m": 0.21324455955264981
+      },
+      "T": {
+        "e1o_m": 0.22444805859007597,
+        "e1c_m": 0.18224097677273116
+      },
+      "paper_target_met_e1c": false,
+      "paper_target_met_e1o": false,
+      "known_input_issue": "Repaired source bag differs from the official checksum and has an approximately 0.5 s all-topic gap at t-t0 approximately 262.5 s."
+    },
+    {
+      "sequence": "Outdoor04",
+      "paper_fast_livo2_m": 0.25,
+      "paper_fast_livgo_target_m": 0.13,
+      "scoring_span_estimator_time_s": [
+        1735891444.9115055,
+        1735892227.427186
+      ],
+      "scoring_duration_s": 782.5156805515289,
+      "gt_timebase": {
+        "method": "chain",
+        "applied_shift_s": 0.09699164562077348,
+        "confidence": "chain_checked"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 18.73404574394226,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "7bd4cf76ed102661cc1e4f27315a10d56a151bdb3a02e3bc782b7746a2d80185",
+      "original_run_manifest_sha256": {
+        "U": "1f0ce92cfb8aeca3f609016865e735b2234531239e6e380c142bf173927f2ea8",
+        "T": "e0ad46a092b12245c58ad71ee6f6e7e40d28b26f97794554add904248404f55e"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "12121b18c8d1ccdfbee6cb3d4572a10240afa586f04d9cf25f3f16a9f90745cd",
+        "T_traj_W": "8b80819aa54a9b27830a70752c304250d7173424228028c234d842f0699f14ca",
+        "T_traj_N_odom": "3ff24df3f4ec06ad8a4ef482c00c30805f53e1d08a25e96b5a10256d088bfbbe"
+      },
+      "ground_truth_clean_sha256": "8350e20cf144528b99a2171dfca5b4a2c32bf526fff07f36f02d406a703b3a08",
+      "U": {
+        "e1o_m": 0.2779810561688356,
+        "e1c_m": 0.2245151799769621
+      },
+      "T": {
+        "e1o_m": 0.3614119354159791,
+        "e1c_m": 0.2953335649732045
+      },
+      "paper_target_met_e1c": false,
+      "paper_target_met_e1o": false
+    },
+    {
+      "sequence": "Dark01",
+      "paper_fast_livo2_m": 0.31,
+      "paper_fast_livgo_target_m": 0.34,
+      "scoring_span_estimator_time_s": [
+        1732537008.1135187,
+        1732537214.102214
+      ],
+      "scoring_duration_s": 205.9886953830719,
+      "gt_timebase": {
+        "method": "chain",
+        "applied_shift_s": 0.10708160547106105,
+        "confidence": "chain_checked"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": false,
+      "activation_seconds_from_span_start": null,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "0f04e63024eaddda5ce76e9ff4d86e41c951def2fd5cf817949a6543c0c77584",
+      "original_run_manifest_sha256": {
+        "U": "a7e76e02f5540d121c6cba3e387b61d5add562c344ff36fe8bccaf114358befd",
+        "T": "b7fd025788825ec893c553a65a6b86a6187ad424efbce9d7880d4db2988227e9"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "57990ff362b917a613830f939d7207b4f641f36bc7091275963a850d79275f1d",
+        "T_traj_W": "57990ff362b917a613830f939d7207b4f641f36bc7091275963a850d79275f1d"
+      },
+      "ground_truth_clean_sha256": "a0a42b7f98bff93b2ae8b47a7b649a4b85edfa896ee58268b2569ac596e69dd9",
+      "U": {
+        "e1o_m": 0.181165719523295,
+        "e1c_m": 0.06620388228201635
+      },
+      "T": {
+        "e1o_m": 0.181165719523295,
+        "e1c_m": 0.06620388228201635
+      },
+      "paper_target_met_e1c": true,
+      "paper_target_met_e1o": true
+    },
+    {
+      "sequence": "Dark02",
+      "paper_fast_livo2_m": 0.18,
+      "paper_fast_livgo_target_m": 0.27,
+      "scoring_span_estimator_time_s": [
+        1732538103.68294,
+        1732538813.701624
+      ],
+      "scoring_duration_s": 710.0186839103699,
+      "gt_timebase": {
+        "method": "record_time",
+        "applied_shift_s": 0.1263561248779297,
+        "confidence": "medium"
+      },
+      "masked_gt_rows": 0,
+      "gnss_activated": false,
+      "activation_seconds_from_span_start": null,
+      "same_host_before_activation": true,
+      "T_attempts": 1,
+      "bag_sha256": "3a0fe190087a0fbc5ca89ffa0c6e9a26742ae72fed64310d51d4aa6858dc77c6",
+      "original_run_manifest_sha256": {
+        "U": "3cbe8768516cb9975366cf10c89b64e6deb419924454fc1b79767c6599710c35",
+        "T": "ca1ef944409345dd245b3d7e5927407ffa36b4fce12fce352262a9ea063a5451"
+      },
+      "archived_raw_pose_sha256": {
+        "U_traj_W": "7198f0f593ea8c521a7ed9655110985e8289dd5a8c0bf9731f45183c94134c22",
+        "T_traj_W": "7198f0f593ea8c521a7ed9655110985e8289dd5a8c0bf9731f45183c94134c22"
+      },
+      "ground_truth_clean_sha256": "cc5039cd78d0ae2fa65bbac4e19e97b2478ddce60d9ce1899cad5fc8647d72e8",
+      "U": {
+        "e1o_m": 0.25765694104323916,
+        "e1c_m": 0.24314874743785547
+      },
+      "T": {
+        "e1o_m": 0.25765694104323916,
+        "e1c_m": 0.24314874743785547
+      },
+      "paper_target_met_e1c": true,
+      "paper_target_met_e1o": true
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "fastlivo-gnss.a81-public-noise-summary.v1",
+  "recorded_date": "2026-10-03",
+  "status": "registered_once_noise_recheck_failed",
+  "kind": "aggregate_gate_check_not_receiver_row_reproduction",
+  "d4_closed_interval": [
+    0.8,
+    1.25
+  ],
+  "proposal_rounds": 1,
+  "recheck_rounds": 1,
+  "downstream": {
+    "noise_freeze": false,
+    "median3_selection": false,
+    "lambda_threshold_selection": false,
+    "frozen_development_replay": false,
+    "final_arm_exists": false,
+    "final_evaluation_replay": false,
+    "evaluation_split_sealed": true
+  },
+  "provenance": {
+    "runtime_source_commit": "1b8aa38ed49775aeedca26feb8680484a3a6a8fb",
+    "runtime_build_sha256": "81cafac177bdd813860bf97c306da6388829704f24541557fd75e0729dea41d0",
+    "original_noise_proposal_sha256": "98303d5a3beb7e2f80928c510914ac2ed3e1fc408275b7e7b6d10d6efa22314b",
+    "original_noise_recheck_sha256": "b192a2a93d13fe59836c5c82d73b76d096e62303979e73081cadf533b1d48c96",
+    "original_independent_smartpnt_verification_sha256": "58098fa5ca20fb5a2312ea8cebed7bde2aae7803932b71d3e13bd471c958d411"
+  },
+  "doppler_statistic": "Accepted TRACKING rows with reason_dopp=none and sigma>0; remove registered temporal inflation to white-equivalent variance; weighted one-column common-clock least squares per epoch with no additional snooping or velocity columns; sum NIS divided by sum(n-1).",
+  "tdcp_statistic": "Logged self-prior NIS sums divided by logged dof sums; the pooled gate can hide opposite per-sequence deviations.",
+  "included_scope": "The release includes numeric sums/counts and verifies pooling and the registered threshold. It does not include or replay full receiver logs.",
+  "smartpnt_independent_doppler_by_sequence": [
+    {
+      "sequence": "Data01_20240707_100C_CAR_complex",
+      "doppler_nis_sum": 207505.80383704032,
+      "doppler_dof_sum": 170676,
+      "config_sha256": "867339d30f168c06180b8c215b506f27089e1df30e92101e63d546c9b7ed14e5",
+      "build_sha256": "81cafac177bdd813860bf97c306da6388829704f24541557fd75e0729dea41d0"
+    },
+    {
+      "sequence": "Data02_20240718_100C_CAR_complex",
+      "doppler_nis_sum": 84545.7780658079,
+      "doppler_dof_sum": 54225,
+      "config_sha256": "867339d30f168c06180b8c215b506f27089e1df30e92101e63d546c9b7ed14e5",
+      "build_sha256": "81cafac177bdd813860bf97c306da6388829704f24541557fd75e0729dea41d0"
+    }
+  ],
+  "gates": [
+    {
+      "dataset": "mars_lvig",
+      "channel": "dopp",
+      "nis_sum": 13890.991699144288,
+      "dof_sum": 12668,
+      "expected_pooled_nis_per_dof": 1.0965418139520278,
+      "expected_d4_pass": true,
+      "variance_scale_used": 0.31240397272196224,
+      "independent_receiver_row_verification": false
+    },
+    {
+      "dataset": "mars_lvig",
+      "channel": "tdcp",
+      "nis_sum": 12220.104931920361,
+      "dof_sum": 12177,
+      "expected_pooled_nis_per_dof": 1.003539864656349,
+      "expected_d4_pass": true,
+      "variance_scale_used": 0.8774104940577039,
+      "independent_receiver_row_verification": false
+    },
+    {
+      "dataset": "smartpnt_mini",
+      "channel": "dopp",
+      "nis_sum": 292051.5819028482,
+      "dof_sum": 224901,
+      "expected_pooled_nis_per_dof": 1.2985784051776035,
+      "expected_d4_pass": false,
+      "variance_scale_used": 0.3190290007066978,
+      "independent_receiver_row_verification": true
+    },
+    {
+      "dataset": "smartpnt_mini",
+      "channel": "tdcp",
+      "nis_sum": 216544.44774425257,
+      "dof_sum": 221848,
+      "expected_pooled_nis_per_dof": 0.9760937567354792,
+      "expected_d4_pass": true,
+      "variance_scale_used": 0.8962720507558993,
+      "independent_receiver_row_verification": false
+    }
+  ]
+}

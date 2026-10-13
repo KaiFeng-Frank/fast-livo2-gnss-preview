@@ -1,0 +1,42 @@
+<launch>
+<!-- Deterministic offline replay of a SmartPNT-MSF mini slim bag (AMENDMENTS A80; the Avia launch with config/smartpnt_mini.yaml
+     and config/smartpnt_mini_camera.yaml in their places, nothing else differs). Run with a private master:
+       ROS_LOG_DIR=<run>/roslog roslaunch -p <port> fast_livo smartpnt_mini_replay.launch bag:=<file.bag> output_dir:=<run> seed:=<k>
+     roslaunch starts its own roscore on <port>, loads the LIVO yaml into the global namespace (as the live node
+     reads it) and the camera yaml into /laserMapping (vikit), then runs fastlivo_replay as node laserMapping.
+     required="true" ends the launch when the replay exits. `prefix` may hold a valgrind command line.
+     seed k = the k-th LiDAR frame (record order) after start_offset opens the view; start_offset is a fixed
+     trim, not a second seed knob. Build identity (git_describe/git_dirty/image_digest/host) is passed by the
+     runner (docs/dev/ref_r_gates/replay_run.sh); the binary additionally self-reports build_sha256.
+     NOTE: roslaunch exits 0 even when the node dies; the runner reads the node's exit code from the console
+     log and treats a run as complete only with replay_stats.json + the "fastlivo_replay: done" line. -->
+
+	<arg name="bag" />
+	<arg name="output_dir" />
+	<arg name="start_offset" default="0.0" />
+	<arg name="seed" default="0" />
+	<arg name="duration" default="-1.0" />
+	<arg name="seq" default="smartpnt" />
+	<arg name="arm" default="U" />
+	<arg name="git_describe" default="unknown" />
+	<arg name="git_dirty" default="unknown" />
+	<arg name="image_digest" default="" />
+	<arg name="bag_sha256" default="" />
+	<arg name="prefix" default="" />
+	<arg name="extra_args" default="" />
+
+	<rosparam command="load" file="$(find fast_livo)/config/smartpnt_mini.yaml" />
+	<param name="replay/enable" value="true" />
+	<param name="replay/bag" value="$(arg bag)" />
+	<param name="replay/start_offset_s" value="$(arg start_offset)" />
+	<param name="replay/seed" value="$(arg seed)" />
+	<param name="replay/duration_s" value="$(arg duration)" />
+	<param name="output/dir" value="$(arg output_dir)" />
+	<param name="evo/seq_name" value="$(arg seq)" />
+
+	<node pkg="fast_livo" type="fastlivo_replay" name="laserMapping" output="screen" required="true"
+	      launch-prefix="$(arg prefix)"
+	      args="--arm $(arg arm) --git-describe $(arg git_describe) --git-dirty $(arg git_dirty) --image-digest '$(arg image_digest)' --bag-sha256 '$(arg bag_sha256)' $(arg extra_args)">
+		<rosparam file="$(find fast_livo)/config/smartpnt_mini_camera.yaml" />
+	</node>
+</launch>

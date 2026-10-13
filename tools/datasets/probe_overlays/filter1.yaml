@@ -1,0 +1,3 @@
+# probe overlay: every LiDAR point used (point_filter_num 1; the config keeps every third point, the OS1-16 value of upstream)
+preprocess:
+  point_filter_num: 1

@@ -1,0 +1,14 @@
+# LIVGO-legacy with adaptive chi-square (L4/L5) off: the paper's "Ours w/o Rejection"
+# (pre-screened GNSS still fused; RAIM masks stay). Same lambda_th, not used to choose the mode's chi-square.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false}
+    tdcp: {chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: true}
+  livgo: {enable: true, lambda_th: 417825.7093, paper_init: false}

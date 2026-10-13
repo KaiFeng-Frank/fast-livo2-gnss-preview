@@ -1,0 +1,143 @@
++
++  // ---- GNSS tight-coupling hooks (P3; IMPL_PLAN 7, DESIGN §4.1/§9, AMENDMENTS A10). Inert until the GNSS glue calls
++  // enable_gnss_hooks(true) (gnss.enable): UndistortPcl then also records the IMU bridge samples of every LIO cycle
++  // and the product of its per-step transitions F_x (H1). The hook statements only read values the upstream code has
++  // already computed and write only the members below; with hooks disabled they are skipped (zero-channel gate).
++public:
++  struct BridgeSample
++  {
++    double t;    // estimator time of the sample
++    V3D a_world; // a = R f + g over the interval ending at t (acc_imu, :415); start sample: acc_s_last
++    V3D omega;   // bias-corrected angular rate over that interval (angvel_avr, :352); start sample: angvel_last
++    M3D R;       // R_{W<-I} at t
++    V3D p, v;    // p^W, v^W at t
++    V3D f_body;  // bias-corrected, gravity-scaled specific force in I (acc_avr, :353); start sample: R^T (a_world - g)
++  };
++  void enable_gnss_hooks(bool en) { hooks_en_ = en; }
++  bool gnss_hooks_enabled() const { return hooks_en_; }
++  // The last UndistortPcl call was a LIO cycle (bridge_t0_, bridge_t1_] and recorded it; false after a VIO cycle.
++  bool gnss_bridge_valid() const { return bridge_valid_; }
++  const std::vector<BridgeSample> &gnss_bridge_samples() const { return bridge_; }   // [0] = cycle start
++  const MD(DIM_STATE, DIM_STATE) &gnss_bridge_F() const { return F_accum_; }          // F_n ... F_1 of that cycle
++  double gnss_bridge_t0() const { return bridge_t0_; }
++  double gnss_bridge_t1() const { return bridge_t1_; }
++  const V3D &gnss_bridge_bg_snap() const { return bridge_bg_snap_; }   // b_g, b_a, g the cycle was propagated with
++  const V3D &gnss_bridge_ba_snap() const { return bridge_ba_snap_; }
++  const V3D &gnss_bridge_g_snap() const { return bridge_g_snap_; }
++  // IMU steps propagated outside a recorded LIO cycle (a VIO cycle that moved the state; never happens upstream,
++  // sync_packages gives VIO cycles no IMU): the glue treats a non-zero count as a broken H1 chain.
++  long gnss_bridge_orphan_steps() const { return bridge_orphan_steps_; }
++  bool gravity_estimation_enabled() const { return gravity_est_en; }
++  bool exposure_estimation_enabled() const { return exposure_estimate_en; }
++
++private:
++  // Out of line and never inlined, so the hook arithmetic cannot be interleaved with UndistortPcl's own code.
++  __attribute__((noinline)) void bridgeBegin(double t, const StatesGroup &state);
++  __attribute__((noinline)) void accumulateF(const MD(DIM_STATE, DIM_STATE) &F_x);
++  __attribute__((noinline)) void bridgeSample(double t, const M3D &R, const V3D &p, const V3D &v, const V3D &omega, const V3D &a_world,
++                                              const V3D &f_body);
++  __attribute__((noinline)) void bridgeEnd(double t1, bool lio_cycle);
++  bool hooks_en_ = false;
++  bool bridge_valid_ = false;
++  bool bridge_open_ = false;
++  std::vector<BridgeSample> bridge_;
++  MD(DIM_STATE, DIM_STATE) F_accum_ = MD(DIM_STATE, DIM_STATE)::Identity();
++  double bridge_t0_ = 0.0, bridge_t1_ = 0.0;
++  V3D bridge_bg_snap_ = V3D::Zero(), bridge_ba_snap_ = V3D::Zero(), bridge_g_snap_ = V3D::Zero();
++  long bridge_orphan_steps_ = 0;
++#include <memory>
++
++namespace livo_gnss_ros { class GnssRosBridge; } // GNSS glue (P3); complete type only in LIVMapper.cpp
++  // GNSS tight coupling (P3; IMPL_PLAN 7, DESIGN §9, AMENDMENTS A12). Always constructed; with gnss.enable = false every
++  // hook returns at once and the host is untouched (zero-channel gate). onStepEnd(): post_vio updates and end of step
++  // (LIVO: VIO cycle; ONLY_LIO: LIO cycle), called after the switch of stateEstimationAndMapping().
++  std::unique_ptr<livo_gnss_ros::GnssRosBridge> gnss_;
++  void onStepEnd();
++    if (hooks_en_) bridgeBegin(prop_beg_time, state_inout); // GNSS hook (P3): cycle-start bridge sample, F_tot = I
++      if (hooks_en_) accumulateF(F_x); // GNSS hook (P3): F_tot <- F_x F_tot (H1)
++      if (hooks_en_) bridgeSample(prop_beg_time + offs_t, R_imu, pos_imu, vel_imu, angvel_avr, acc_imu, acc_avr); // GNSS hook (P3)
++    if (hooks_en_) bridgeEnd(prop_end_time, lidar_meas.lio_vio_flg == LIO); // GNSS hook (P3): close the LIO cycle's bridge
++// ---- GNSS tight-coupling hooks (P3; IMPL_PLAN 7, DESIGN §4.1, AMENDMENTS A10). Called only when hooks_en_. ----
++
++// Start of a LIO cycle (after :281): the cycle-start sample {prop_beg_time, R, p, v, angvel_last, acc_s_last} with
++// f_body = R^T (acc_s_last - g), F_tot = I and the b_g/b_a/g the cycle is propagated with (constant inside UndistortPcl).
++void ImuProcess::bridgeBegin(double t, const StatesGroup &state)
++{
++  bridge_.clear();
++  BridgeSample s;
++  s.t = t;
++  s.a_world = acc_s_last;
++  s.omega = angvel_last;
++  s.R = state.rot_end;
++  s.p = state.pos_end;
++  s.v = state.vel_end;
++  s.f_body = state.rot_end.transpose() * (acc_s_last - state.gravity);
++  bridge_.push_back(s);
++  F_accum_.setIdentity();
++  bridge_bg_snap_ = state.bias_g;
++  bridge_ba_snap_ = state.bias_a;
++  bridge_g_snap_ = state.gravity;
++  bridge_t0_ = t;
++  bridge_valid_ = false;
++  bridge_open_ = true;
++}
++
++// After :401: left-multiply the step transition, F_tot = F_x,n ... F_x,1 over (t0, t1] (DESIGN §2.4 H1).
++void ImuProcess::accumulateF(const MD(DIM_STATE, DIM_STATE) &F_x) { F_accum_ = F_x * F_accum_; }
++
++// After :430: the state after one IMU interval, with the constant a (incl. g), omega and specific force of that
++// interval (the bridge interpolates (t_i, t_{i+1}] exactly as :412-421 propagate it).
++void ImuProcess::bridgeSample(double t, const M3D &R, const V3D &p, const V3D &v, const V3D &omega, const V3D &a_world, const V3D &f_body)
++{
++  if (!bridge_open_)
++  {
++    ++bridge_orphan_steps_; // propagation outside a LIO cycle: the glue stops using the bridge
++    return;
++  }
++  BridgeSample s;
++  s.t = t;
++  s.a_world = a_world;
++  s.omega = omega;
++  s.R = R;
++  s.p = p;
++  s.v = v;
++  s.f_body = f_body;
++  bridge_.push_back(s);
++}
++
++// After :435 (both LIO and VIO cycles reach it): a LIO cycle's bridge becomes valid; a VIO cycle invalidates it.
++void ImuProcess::bridgeEnd(double t1, bool lio_cycle)
++{
++  bridge_t1_ = t1;
++  bridge_valid_ = lio_cycle && bridge_open_;
++  bridge_open_ = false;
++}
++
++#include "livo_gnss_ros/gnss_ros_bridge.hpp" // GNSS glue (P3)
++  gnss_.reset(new livo_gnss_ros::GnssRosBridge()); // GNSS hook (P3)
++  // GNSS hook (P3): gnss: tree -> livo_gnss::Config; a rejected configuration must not start (DESIGN §14, A16).
++  std::string gnss_why;
++  if (!gnss_->loadParams(nh, &gnss_why)) throw std::runtime_error("gnss parameters rejected: " + gnss_why);
++
++
++  // GNSS hook (P3): T_{I<-L}, SLAM mode, host flags; enables the ImuProcess bridge hooks only when gnss.enable.
++  std::string gnss_why;
++  if (!gnss_->configure(extR, extT, slam_mode_, p_imu, &gnss_why)) throw std::runtime_error("gnss configuration rejected: " + gnss_why);
++  gnss_->setupRos(nh, replay_mode_); // GNSS hook (P3): live ShapeShifter subscriptions, /gnss/* publishers
++  if (gnss_ && LidarMeasures.lio_vio_flg == LIO && !p_imu->imu_need_init) gnss_->onLioStep(_state, *p_imu, LidarMeasures.last_lio_update_time); // GNSS hook (P3): H1 + state machine + H3 (DESIGN §9)
++
++  if (gnss_) onStepEnd(); // GNSS hook (P3): post_vio updates (A12) + end of step
++}
++
++// GNSS (P3; DESIGN §9, AMENDMENTS A12): the step ends with the VIO cycle in LIVO and with the LIO cycle in ONLY_LIO.
++// post_vio updates run on that cycle's last host posterior, before onStepEnd (C_ref refresh, N-frame outputs).
++void LIVMapper::onStepEnd()
++{
++  const bool step_end = (slam_mode_ == LIVO) ? (LidarMeasures.lio_vio_flg == VIO) : (LidarMeasures.lio_vio_flg == LIO);
++  if (!step_end) return;
++  gnss_->onPostVio(_state, LidarMeasures.last_lio_update_time);
++  gnss_->onStepEnd(_state, LidarMeasures.last_lio_update_time, cycle_idx_);
++  if (gnss_) gnss_->onCoreUpdated(state_propagat, _state, livo_gnss::UpdateSource::VIO, -1); // GNSS hook (P3): H2(VIO)
++  if (gnss_) gnss_->onCoreUpdated(state_propagat, _state, livo_gnss::UpdateSource::LIO, voxelmap_manager->effct_feat_num_); // GNSS hook (P3): H2(LIO)
++  if (gnss_) gnss_->publishGlobal(_state, LidarMeasures.last_lio_update_time); // GNSS hook (P3): /gnss/* topics, TF enu->camera_init
++  if (gnss_) gnss_->finish(); // GNSS hook (P3): summary, sat2freq report, live output files

@@ -1,0 +1,10 @@
+# Diagnostic arm T-consider (AMENDMENTS A70; development set only, not an evaluation arm): arm T with the A66 treatment of
+# the tilt in the Doppler rows (consider entry) instead of the A70 default (projection) — the T of the A66 build. On the
+# A70 build it must reproduce the A66 T (build bc6a15f1) byte for byte.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  noise: {dopp: {project_tilt: false, consider_tilt: true}}

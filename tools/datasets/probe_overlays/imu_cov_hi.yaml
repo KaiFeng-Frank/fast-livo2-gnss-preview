@@ -1,0 +1,4 @@
+# probe overlay: IMU process noise 4x higher than the upstream defaults (the LiDAR weighs more)
+imu:
+  acc_cov: 2.0
+  gyr_cov: 1.2

@@ -1,0 +1,36 @@
+livo patch P1 (DESIGN §12.1, AMENDMENTS A9-4) — BeiDou PRN range and the MAXSAT <= 255 guard.
+
+Purpose
+  * rtklib.h:211 `#define MAXPRNCMP 50` becomes `#ifndef MAXPRNCMP` / 63. With 50, satno(SYS_CMP, prn) returns 0 for
+    C51-C63 (rtkcmn.c:415) although eph2pos already treats prn >= 59 as GEO (ephemeris.c:265); the IGS BRDC files
+    carry C59/C60/C62. The build passes -DMAXPRNCMP=63 as a PUBLIC definition (third_party/rtklib/CMakeLists.txt)
+    so every consumer TU sees the same obsd_t/nav_t layout.
+  * after rtklib.h:248 MAXSAT: a preprocessor assertion MAXSAT <= 255, because obsd_t.sat is uint8_t
+    (with 63 BDS PRNs MAXSAT = 32+27+36+10+63+14+39 = 221).
+Numerics: none changed for satellites that exist in both builds (U5 golden, A9-4). Satellite numbers after
+BDS (IRN, LEO, SBS) shift by 13; nothing in livo_gnss stores them.
+Applied with `patch -p1` in the build-tree copy of upstream/ (third_party/rtklib/CMakeLists.txt).
+
+--- a/src/rtklib.h
++++ b/src/rtklib.h
+@@ -208,7 +208,9 @@
+ #endif
+ #ifdef ENACMP
+ #define MINPRNCMP   1                   /* min satellite sat number of BeiDou */
+-#define MAXPRNCMP   50                  /* max satellite sat number of BeiDou */
++#ifndef MAXPRNCMP                       /* livo P1: settable by the build; 63 maps C51-C63 (GEO C59-C63) */
++#define MAXPRNCMP   63                  /* max satellite sat number of BeiDou */
++#endif
+ #define NSATCMP     (MAXPRNCMP-MINPRNCMP+1) /* number of BeiDou satellites */
+ #define NSYSCMP     1
+ #else
+@@ -247,6 +249,9 @@
+ 
+ #define MAXSAT      (NSATGPS+NSATGLO+NSATGAL+NSATQZS+NSATCMP+NSATIRN+NSATSBS+NSATLEO)
+                                         /* max satellite number (1 to MAXSAT) */
++#if MAXSAT>255                          /* livo P1: obsd_t.sat is uint8_t */
++#error "MAXSAT exceeds 255 but obsd_t.sat is uint8_t (livo patch P1)"
++#endif
+ #define MAXSTA      255
+ 
+ #ifndef MAXOBS

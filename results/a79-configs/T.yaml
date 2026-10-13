@@ -1,0 +1,10 @@
+# Arm T (AMENDMENTS A46): tight coupling, full measurement set (pseudorange + Doppler + TDCP).
+# Overlay loaded after config/m3dgr_avia.yaml (roslaunch <rosparam command="load"> / fastlivo_replay --param-file):
+# rosparam merges maps leaf by leaf, so only the keys below change. Every arm sets the same keys, so no two overlays can
+# leak into each other; everything else (noise, masks, time, frames) is the shared configuration of m3dgr_avia.yaml.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}

@@ -1,0 +1,16 @@
+# LIVGO-legacy plus the P2 observer (AMENDMENTS A75 revision 1): the negative control of prediction P2. Every key is
+# LIVGO-legacy.yaml's; the one addition is livgo.tdcp_gain_log, which writes livgo_tdcp_gain.csv (the epoch's posterior with and
+# without its TDCP rows) and changes nothing the filter does: the other outputs of a run equal LIVGO-legacy's byte for byte.
+# Calibration arm, not an evaluation arm.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false}
+    tdcp: {chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, lambda_th: 417825.7093, paper_init: false, tdcp_gain_log: true}

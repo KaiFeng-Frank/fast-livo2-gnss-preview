@@ -1,0 +1,24 @@
+# FAST-LIVGO reproduction (arXiv:2606.19190v2). Calibration arm, not an evaluation arm.
+# Doppler and fixed-anchor TDCP only. Pseudorange stays in the SPP/RAIM path (the facade forces use.psr off
+# for the filter when livgo.enable is set). Elevation is the paper floor (15 deg). C/N0 stays at the frozen
+# A58 floors: a hard cut at the paper's 35 dB-Hz admits no satellite on this receiver (Grass01 CN0 max 32).
+# Numbers the paper does not give stay at the registered defaults
+# (hessian window 10, DTW 30 epochs, chi-square = rejection.alpha_nis).
+# lambda_th is not in the paper. Scored value: 5th percentile (Hyndman type 7) of the pooled
+# Grass01/s4 + Grass02/s0 window means, window full and at least 30 s after activation, from the
+# lambda_th=0 collection runs a72-livgo2-g1 and a72-livgo2-g2 (n=10908, frozen yaml 2ff4034f).
+# Z-Rough-Road01 was not used. About 95% of those open epochs are at or above this threshold.
+# paper_init true: III-C2, X_init = {^E R_G in SO(3), ^E p_G, ^I t_r} on GNSS position after DTW.
+# LIVGO-legacy.yaml sets it false (activate() only). LIVGO-norej.yaml is that control with L4/L5 off.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false}
+    tdcp: {chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, lambda_th: 417825.7093, paper_init: true}

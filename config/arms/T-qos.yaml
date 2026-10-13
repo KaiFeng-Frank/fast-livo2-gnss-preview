@@ -1,0 +1,12 @@
+# Diagnostic arm T-qos (AMENDMENTS A67; development set only, not an evaluation arm): arm T with the vertical terms of the
+# registration walk taken from the open-sky development sequences alone (A59 judgement 10 ③). A58's per-trajectory frame
+# fits (runs/p4c/frame_r1.json) give q_tilt 0 … 1.62e-8 rad²/m and q_tv 0 … 2.65e-4 m²/m on the 10 U trajectories of
+# Grass01/02; the frozen 1.44e-7 / 8.57e-4 are the 75 % quantiles over all 25 trajectories, set by Occlusion03/04 (whose RTK
+# vertical A58 already doubted). Here the open-sky maxima; everything else as T.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  process: {frame: {q_tilt_per_m: 1.62e-8, q_tv_per_m: 2.65e-4}}

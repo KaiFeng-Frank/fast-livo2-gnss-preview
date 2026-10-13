@@ -1,0 +1,9 @@
+# Calibration arm T-diag (AMENDMENTS A58, TEST_PLAN §3 review; development set only, not an evaluation arm): arm T with
+# gnss_sats.csv written. The file is an output only: the estimate is bit-identical to arm T (P3 integration record).
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  output: {sat_csv: true}

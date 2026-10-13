@@ -1,0 +1,13 @@
+# Diagnostic arm T-diag-nocons (AMENDMENTS A66/A67, A70; development set only, not an evaluation arm): arm T-diag with the
+# Doppler rows' full tilt content — neither the A66 consider treatment nor the A70 projection (the Doppler rows update φ
+# again, the pre-A66 joint gain), everything else as T-diag. On the A66 build (then consider_tilt alone) and on the A70
+# build it must reproduce the A59 T-diag (build f4eb356f) byte for byte: the instrument check that these two switches are
+# the only change of the estimate.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  output: {sat_csv: true}
+  noise: {dopp: {consider_tilt: false, project_tilt: false}}

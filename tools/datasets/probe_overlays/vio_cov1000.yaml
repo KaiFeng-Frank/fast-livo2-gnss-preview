@@ -1,0 +1,3 @@
+# probe overlay: photometric measurement covariance 10x the configured (the VIO weighs less)
+vio:
+  img_point_cov: 1000

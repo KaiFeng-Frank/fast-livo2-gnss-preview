@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: BSD-3-Clause
+cmake_minimum_required(VERSION 3.11)
+project(fastlivo_gnss_preview CXX C)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+# Match gnss/CMakeLists.txt's standalone profile across all Eigen objects.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fexceptions")
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm|aarch64|ARM|AARCH64)")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -mcpu=native -mtune=native")
+else()
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -march=native -mtune=native -funroll-loops")
+endif()
+set(LIVO_GNSS_BUILD_TESTS ON CACHE BOOL "Build the portable core test suite")
+set(LIVO_GNSS_STRICT_FP ON CACHE BOOL "Disable floating-point contraction")
+enable_testing()
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../../gnss" core)
+
+add_executable(preview_demo demo.cpp)
+target_link_libraries(preview_demo PRIVATE livo_gnss_sim)
+target_compile_definitions(preview_demo PRIVATE EIGEN_DONT_PARALLELIZE)
+if(LIVO_GNSS_STRICT_FP)
+  target_compile_options(preview_demo PRIVATE -ffp-contract=off)
+endif()

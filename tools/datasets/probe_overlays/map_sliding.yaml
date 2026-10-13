@@ -1,0 +1,6 @@
+# probe overlay: the LIO voxel map slides with the sensor (upstream local_map keys: cells farther than half_map_size [m] from the
+# sensor are freed when the sensor has moved sliding_thresh [m] since the last slide)
+local_map:
+  map_sliding_en: true
+  half_map_size: 100
+  sliding_thresh: 8

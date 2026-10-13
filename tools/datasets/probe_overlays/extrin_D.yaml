@@ -1,0 +1,4 @@
+# probe overlay: candidate D
+extrin_calib:
+  extrinsic_R: [0, 0, -1, -1, 0, 0, 0, 1, 0]
+  extrinsic_T: [0.03411, 0, 0]

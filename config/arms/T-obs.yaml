@@ -1,0 +1,13 @@
+# Calibration arm T-obs (AMENDMENTS A58, TEST_PLAN §3; development set only, not an evaluation arm): arm T in OBSERVE
+# (update_enable false: everything is computed, nothing is committed, the host stays ref-R bit for bit), every row logged in
+# gnss_sats.csv, the L0 C/N0 and receiver-std masks opened so that the innovation tails below the masks are measured, and
+# Doppler rows also formed at TDCP pair ends (nothing is committed, so nothing is used twice).
+gnss:
+  enable: true
+  update_enable: false
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  output: {sat_csv: true}
+  masks: {cn0_psr: 0.0, cn0_dopp: 0.0, cn0_cp: 0.0, max_psr_std_m: 1.0e+6, max_dopp_std_hz: 1.0e+6, max_cp_std_m: 1.0e+6}
+  noise: {dopp: {exclusive_with_tdcp: false}}

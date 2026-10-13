@@ -1,0 +1,18 @@
+<launch>
+<!-- P3-B glue tests (ros/test/test_p3b_glue.cpp): HostView, ImuHooks, Params, Sat2Freq, Wgs84, I14. rostest provides the
+     master that Params.* (parameter server) and I14.* (ROS transport of ShapeShifter messages) need. The base
+     configuration is loaded exactly as the launch files load it; the A46 arm overlays go to their own namespaces so the
+     test can apply each one on top of the base (graph names cannot contain '-': L-PVT → L_PVT etc.). -->
+	<rosparam command="load" file="$(find fast_livo)/config/m3dgr_avia.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/U" file="$(find fast_livo)/config/arms/U.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/L_PVT" file="$(find fast_livo)/config/arms/L-PVT.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/T" file="$(find fast_livo)/config/arms/T.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/T_pr" file="$(find fast_livo)/config/arms/T-pr.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/T_dop" file="$(find fast_livo)/config/arms/T-dop.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/T_tdcp" file="$(find fast_livo)/config/arms/T-tdcp.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/LIVGO_literal" file="$(find fast_livo)/config/arms/LIVGO-literal.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/LIVGO_literal_paper" file="$(find fast_livo)/config/arms/LIVGO-literal-paper.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/LIVGO_literal_diag" file="$(find fast_livo)/config/arms/LIVGO-literal-diag.yaml" />
+	<rosparam command="load" ns="p3b_test/arms/LIVGO_literal_paper_diag" file="$(find fast_livo)/config/arms/LIVGO-literal-paper-diag.yaml" />
+	<test test-name="test_p3b_glue" pkg="fast_livo" type="test_p3b_glue" time-limit="600.0" />
+</launch>

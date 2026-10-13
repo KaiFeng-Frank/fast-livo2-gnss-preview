@@ -1,0 +1,3 @@
+# probe overlay: LIO only (no camera, no VIO update)
+common:
+  img_en: 0

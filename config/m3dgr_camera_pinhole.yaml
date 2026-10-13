@@ -1,0 +1,18 @@
+# Modified for FAST-LIVO2-GNSS, September–October 2026.
+# M3DGR baseline: Copyright (c) 2025 Yin Jie; see LICENSES/M3DGR-MIT.txt.
+# Project modifications: GPL-2.0-only; see THIRD_PARTY_NOTICES.md.
+# M3DGR D435i colour camera, from the official baseline
+# baseline_systems/Fast_LIVO2_M3DGR/src/fast_livo2/config/camera_pinhole_m3dgr.yaml (AMENDMENTS A6):
+# 640x480 pinhole, scale 0.5, zero distortion. Loaded into /laserMapping (vikit camera_loader).
+cam_model: Pinhole
+cam_width: 640
+cam_height: 480
+scale: 0.5
+cam_fx: 607.79772949218
+cam_fy: 607.83526613281
+cam_cx: 328.79772949218
+cam_cy: 245.53321838378
+cam_d0: 0.0
+cam_d1: 0.0
+cam_d2: 0.0
+cam_d3: 0.0

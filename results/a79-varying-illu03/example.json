@@ -1,0 +1,60 @@
+{
+  "schema": "fastlivo-gnss.external-gt-example.v1",
+  "sequence": "Varying-illu03",
+  "ground_truth_included": false,
+  "generated_estimates": [
+    {
+      "arm": "U",
+      "path": "results/a79-varying-illu03/U_scoring_poses.tum.gz",
+      "gzip_sha256": "3c894962943cf306fdcfcec703ca19c524b594e5104f7f067fd026c23d95c7c8",
+      "uncompressed_sha256": "631d7da9a362bf66d728cdb6a46550b4864ada0de2270568571468d9dd53ba89",
+      "uncompressed_bytes": 3453699,
+      "poses": "Archived assembled scoring output; T includes the registered activation-frame mapping for preactivation poses."
+    },
+    {
+      "arm": "T",
+      "path": "results/a79-varying-illu03/T_scoring_poses.tum.gz",
+      "gzip_sha256": "07317afedee64aa4bcd255b1ec523342709d62b3e725c6cab3ae2da081ad478b",
+      "uncompressed_sha256": "15b4a151afa02339fa4adc89b963adb12226ebd18742b674babbbacfb63fd3c0",
+      "uncompressed_bytes": 3414333,
+      "poses": "Archived assembled scoring output; T includes the registered activation-frame mapping for preactivation poses."
+    }
+  ],
+  "ground_truth_source": "https://github.com/sjtuyinjie/M3DGR#5-dataset-sequences",
+  "ground_truth_expected_format": "Original unshifted TUM (t x y z qx qy qz qw); gt_clean.tum from the historical auditor also accepted. Do not supply gt_audited.tum: the registered shift is applied by the preview scorer.",
+  "cleaning": "Stable time sort, keep first of duplicate timestamps; render cleaned columns with six decimal places for identity hash.",
+  "clean_ground_truth_bytes_sha256": "06f4687eb46723d0af0476528e27a0e215ae43907b3bad484f1c3afd1db70b08",
+  "clean_ground_truth_canonical_sha256": "06f4687eb46723d0af0476528e27a0e215ae43907b3bad484f1c3afd1db70b08",
+  "clean_ground_truth_rows": 7153,
+  "timebase": {
+    "method": "record_time",
+    "applied_shift_s": 0.021956682205200195,
+    "confidence": "medium"
+  },
+  "scoring_span_estimator_time_s": [
+    1736776053.0768516,
+    1736777080.1902308
+  ],
+  "excluded_intervals_estimator_time_s": [],
+  "association_max_diff_s": 0.05,
+  "fixed_gt_antenna_lever_imu_m": [
+    -0.01999096558,
+    -0.1534376595,
+    -0.04942328067
+  ],
+  "expected_metrics_m": {
+    "U": {
+      "e1o_m": 1.72136270816144,
+      "e1c_m": 1.7148140211287328
+    },
+    "T": {
+      "e1o_m": 2.3041537591035506,
+      "e1c_m": 2.274239005043383
+    }
+  },
+  "numeric_tolerance_m": 2e-08,
+  "metric_note": "No scale; nearest-time pairing; add the fixed IMU-to-GT-antenna lever for e1c. U/T are each aligned over the same full registered span.",
+  "ground_truth_official_txt_url": "https://1drv.ms/t/c/2b4bfc0edf421186/EYYRQt8O_EsggCtHEAAAAAABns-I3zsf1W1ysuU-5aiyyA?e=O2M98r",
+  "ground_truth_official_alternative_url": "https://www.alipan.com/s/6mgxxw4Kze1",
+  "ground_truth_dataset_relative_path": "Visual_Challenge/Outdoor/Varying-illu03.txt"
+}

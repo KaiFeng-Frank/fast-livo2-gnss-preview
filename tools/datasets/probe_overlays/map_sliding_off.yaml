@@ -1,0 +1,3 @@
+# probe overlay: the LIO voxel map keeps everything (the config before the sliding map was switched on)
+local_map:
+  map_sliding_en: false

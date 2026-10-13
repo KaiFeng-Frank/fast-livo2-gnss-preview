@@ -1,0 +1,5 @@
+# probe overlay: LiDAR time offset 0 (the configured value; baseline of the sweep)
+time_offset:
+  lidar_time_offset: 0.0
+  img_time_offset: 0.0310331028
+  imu_time_offset: 0.0

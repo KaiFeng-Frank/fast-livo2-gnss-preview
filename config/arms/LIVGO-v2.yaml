@@ -1,0 +1,35 @@
+# LIVGO-v2 (AMENDMENTS A75 section 6), calibration arm, not an evaluation arm. Noise: the A58 row noise model with the
+# frozen yaml's coefficients (sigma_toff included). LIVGO-v2-paper.yaml is the same arm with flat row noise.
+# Changes against LIVGO-legacy.yaml (every one is a livgo/* switch or an existing key; nothing else differs):
+#   update_slot post_vio       GNSS after LIVO, the paper's order (A12 slot; the anchor of a TDCP pair is the state after the
+#                              previous epoch's update)
+#   noise.tdcp                 interval_s 0.1, max_span_s 0.15, chain_pairs: pairs of consecutive receiver epochs (10 Hz), chained,
+#                              fixed anchor; a gap beyond 0.15 s parks the chain
+#   noise.dopp.exclusive_with_tdcp false    Doppler and TDCP use the same satellites at a pair end
+#   init.yaw_sigma_max_deg 0.5 activate only once the yaw is determined to 0.5 deg (3.0 in the frozen yaml)
+#   livgo.frame_exact          registration tilt and translation exact constants; yaw a state, updated by the GNSS rows
+#   livgo.lambda_source lio    dual mode on the LiDAR translation Hessian only
+#   livgo.dtw_online false     time from the offline calibration only
+#   livgo.tdcp_gain_log true   observer (A75 revision 1, prediction P2): livgo_tdcp_gain.csv, the epoch's posterior with and without
+#                              its TDCP rows; nothing in the filter reads it
+# lambda_th 1017833.912 (A75 section 6.4): the definition of lambda changed (lio only), so the A73 value (417825.7093, min of
+# LIO and VIO, n=10908) does not carry over. Value = 5th percentile (Hyndman type 7, numpy.percentile default) of the pooled
+# window means lambda_bar of the lambda_th = 0 collection runs a75-lam-g1 (Grass01 seed 4, n=4683) and a75-lam-g2 (Grass02
+# seed 0, n=2030), n=6713; window full and at least 30 s after the first ACTIVATE. Both runs: this arm with lambda_th 0 (arm
+# yaml sha256 8c61ef33), config/m3dgr_avia.yaml sha256 d3b11431, build_sha256 a2207cda. Z-Rough-Road01 not used. LIVGO-v2-paper
+# takes the same value (same lambda definition). About 95 % of the pooled open steps are at or above it.
+# Pseudorange stays in the SPP/RAIM path (the facade keeps it out of the filter); elevation mask 15 deg; C/N0 masks as frozen.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: post_vio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  init: {yaw_sigma_max_deg: 0.5}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false, exclusive_with_tdcp: false}
+    tdcp: {interval_s: 0.1, max_span_s: 0.15, chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, paper_init: false, frame_exact: true, lambda_source: lio, dtw_online: false, lambda_th: 1017833.912, noise_mode: model,
+          tdcp_gain_log: true}

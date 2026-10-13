@@ -1,0 +1,23 @@
+# LIVGO-literal-paper with the per-satellite diagnostic gnss_sats.csv (AMENDMENTS A81 section 2: development-set calibration arm, never an
+# evaluation arm; the same pattern as T-diag.yaml). The file is an output only: the estimate is bit-identical to LIVGO-literal-paper.yaml's
+# (checked per build, A81 implementation record 1). The only content difference to LIVGO-literal-paper.yaml is output.sat_csv; the glue test
+# Params.LivgoLiteralDiagArmsDifferOnlyInTheSatelliteCsv holds the two files to that.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  output: {sat_csv: true}
+  update_slot: post_vio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false, exclusive_with_tdcp: false}
+    tdcp: {interval_s: 0.1, max_span_s: 0.15, chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, paper_init: true, init_travel_m: 50.0, init_tilt_sigma_max_deg: 0.2,
+          frame_exact: true, freeze_yaw: true,
+          cn0_hard: true, cn0_min_dbhz: 35.0, el_min_deg: 15.0, primary_only: true, tdcp_raim_both_ends: true,
+          dtw_online: true, dtw_at_init: true, dtw_grid_s: 0.1, single_init: true,
+          lambda_source: lio, lambda_th: 0.0,
+          noise_mode: flat, flat_sigma_tdcp_m: 0.001, flat_sigma_dopp_mps: 0.05,
+          tdcp_gain_log: true}

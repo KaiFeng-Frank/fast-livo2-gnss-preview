@@ -1,0 +1,38 @@
+SPDX-License-Identifier: GPL-3.0-only
+Modified for FAST-LIVO2-GNSS, September 2026.
+This patch contains context from rpg_vikit@6c886c8 (GPLv3); see LICENSES/GPL-3.0-only.txt.
+It is a separate patch for an external dependency, not a vendored package checkout.
+
+rpg_vikit (xuankuzcr/rpg_vikit @6c886c8): respect an externally supplied CMAKE_CXX_FLAGS (AMENDMENTS A22).
+
+vikit_common/CMakeLists.txt:10 and vikit_ros/CMakeLists.txt:8 *overwrite* CMAKE_CXX_FLAGS with a hard-coded
+string, so a flag passed by the workspace (`catkin_make -DCMAKE_CXX_FLAGS=-ffp-contract=off`, the eval profile
+of DESIGN §13) never reaches the vikit TUs. Both lines now *prepend* the incoming value. Nothing else changes:
+the hard-coded token sequence (-Wall ... -march=native ...) is kept verbatim, and vikit_common:28
+(CMAKE_CXX_FLAGS_RELEASE = "${CMAKE_CXX_FLAGS} -O3 -fsee -fomit-frame-pointer -fno-signed-zeros -fno-math-errno
+-funroll-loops") already appends to CMAKE_CXX_FLAGS and therefore inherits the injected flag through it.
+With an empty CMAKE_CXX_FLAGS (default profile) the compile commands are token-for-token identical to the
+unpatched tree (compile-command gate, tools/dev/compare_compile_commands.py --include-vikit).
+
+--- a/vikit_common/CMakeLists.txt
++++ b/vikit_common/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ SET(USE_ROS TRUE) # Set False if you want to build this package without Catkin
+ 
+ # Set build flags. Set IS_ARM on odroid board as environment variable
+-SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
++SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
+ # IF(DEFINED ENV{ARM_ARCHITECTURE})
+ #   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon -march=armv8-a")
+ # ELSE()
+--- a/vikit_ros/CMakeLists.txt
++++ b/vikit_ros/CMakeLists.txt
+@@ -5,7 +5,7 @@
+ SET(CMAKE_VERBOSE_MAKEFILE OFF)
+ 
+ # Set build flags
+-SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
++SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
+ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -O0 -g")
+ IF(CMAKE_COMPILER_IS_GNUCC)
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")

@@ -1,0 +1,4 @@
+# probe overlay: visual-map density. vio/grid_size > 10 makes the sampling grid ceil(width/grid_size) x ceil(height/grid_size) cells
+# (640x512 image: grid_size 60 -> 11 x 9 = 99 cells, 100 -> 7 x 6 = 42 cells; the default 5 means 17 rows of cells of 30 px = 357 cells)
+vio:
+  grid_size: 100

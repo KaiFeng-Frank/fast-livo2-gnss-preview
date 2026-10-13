@@ -1,0 +1,10 @@
+# Arm L-PVT (AMENDMENTS A46): loose coupling on the receiver's own PVT (DESIGN §4.6): position rows + PVT velocity; same frame model, bridge and gating as T.
+# Overlay loaded after config/m3dgr_avia.yaml (roslaunch <rosparam command="load"> / fastlivo_replay --param-file):
+# rosparam merges maps leaf by leaf, so only the keys below change. Every arm sets the same keys, so no two overlays can
+# leak into each other; everything else (noise, masks, time, frames) is the shared configuration of m3dgr_avia.yaml.
+gnss:
+  enable: true
+  update_enable: true
+  mode: loose_pvt
+  update_slot: pre_lio
+  use: {psr: false, dopp: false, tdcp: false, pvt_vel: true}

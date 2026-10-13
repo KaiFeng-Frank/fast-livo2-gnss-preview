@@ -1,0 +1,11 @@
+# T plus the paper's Hessian dual-mode rejection only (IV-E). Not a second chi-square: T already runs L4/L5
+# (alpha_nis = 1e-3) on every epoch. Mode A keeps that test. Mode B (windowed translation λ_min < λ_th) sets
+# disable_l4_l5 and leaves RAIM/L1 and the rest of T. Pseudorange stays in the filter. The frame random walk,
+# activate(), DTW-off and the Doppler tilt projection stay as T. λ_th and the window are the registered values.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  livgo: {enable: true, dual_only: true, paper_init: false, lambda_th: 417825.7093, hessian_window: 10}

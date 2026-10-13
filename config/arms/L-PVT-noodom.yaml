@@ -1,0 +1,9 @@
+# Diagnostic arm L-PVT-noodom (AMENDMENTS A62; development set only, not an evaluation arm): arm L-PVT without the A61 F13
+# odometry output (no Origin stop-clone), everything else as L-PVT. Counterfactual of the not_psd rollback at ACTIVATE.
+gnss:
+  enable: true
+  update_enable: true
+  mode: loose_pvt
+  update_slot: pre_lio
+  use: {psr: false, dopp: false, tdcp: false, pvt_vel: true}
+  output: {odom_output: false}

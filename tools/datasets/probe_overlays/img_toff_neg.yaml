@@ -1,0 +1,3 @@
+# probe overlay: camera time offset -0.0310331 s (the Kalibr timeshift with the opposite sign)
+time_offset:
+  img_time_offset: -0.0310331028

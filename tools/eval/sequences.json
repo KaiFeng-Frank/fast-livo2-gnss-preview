@@ -1,0 +1,177 @@
+{
+  "_doc": [
+    "P3-D sequence registry (tools/eval, SPDX BSD-3-Clause). One entry per M3DGR sequence the project touches.",
+    "class: AMENDMENTS A2/A26 (must agree with tools/fl2g/sequences.py, checked by tools/eval/tests/test_registry.py).",
+    "cloud: path in the imported Alipan shares (remote aliyunpan, config tools/apcfg); layout 'parts' = a directory of",
+    "  <seq>.partNNN.exe pieces that are byte-concatenated in name order into one 7-Zip SFX <seq>.exe (the share's own",
+    "  merge_script.ps1 does exactly that), 'single' = one <seq>.exe; null = not in an imported share.",
+    "checksum_key / sha256: the line of the official M3DGR checksums.txt (remote data/m3dgr/checksums.txt, uppercase hex).",
+    "gt: path under data/m3dgr/raw/<share>/GT (already downloaded); gt_kind rtk = trajectory GT (evo ATE), aruco = start/end",
+    "  ArUco markers (official ArUco_evaluate.py, TEST_PLAN E5; not an ATE).",
+    "date_local / duration_s / size_gb: M3DGR README tables (informational; the BRDC day is taken from the bag itself).",
+    "table2: column of FAST-LIVGO (arXiv:2606.19190v2) Table II; group = the paper's header (open_sky | gnss_denied).",
+    "A80 (tools/datasets): entries with dataset = smartpnt_mini | mars_lvig (default m3dgr) have no cloud / checksum fields: the data are fetched by",
+    "  tools/datasets/{smartpnt,mars}/ (sources, hashes and decisions: <seq>/build.json under /data2/fl2g). `bag` and `gt_dir` are relative to the",
+    "  second project root /data2/fl2g (run_matrix --root /data2/fl2g with FL2G_BUILD_ROOT=<main root>; tools/datasets/README.md); `lidar` names the",
+    "  tools/eval/lidars.json profile; gt_reference_point = the point the trajectory GT refers to (lidars.json gt_lever_imu leads from the host IMU to it);",
+    "  portal = path under SmartPNT/SmartPNT; duration_s = the replay bag's span (build.json)."
+  ],
+  "checksums_file": "data/m3dgr/checksums.txt",
+  "gt_raw_root": "data/m3dgr/raw/来自分享/GT",
+  "sequences": {
+    "Varying-illu03": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Varying-illu03", "cloud_layout": "parts",
+      "checksum_key": "Visual_Challenge\\outdoor\\Varying-illu03.bag",
+      "sha256": "76593AC46AC14C909102C7D28B00873A1562F7206E9F1381C3B2CE534B4A2F21",
+      "gt": "Visual_Challenge/Outdoor/Varying-illu03.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-13", "duration_s": 1027, "size_gb": 13.5, "table2": {"group": "open_sky", "col": 0}
+    },
+    "Varying-illu04": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Varying-illu04", "cloud_layout": "parts",
+      "checksum_key": "Visual_Challenge\\outdoor\\Varying-illu04.bag",
+      "sha256": "5F0284F7D5D0966133A9B16DA5CC183B643044E869F698C925A891ED527E09A5",
+      "gt": "Visual_Challenge/Outdoor/Varying-illu04.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-13", "duration_s": 667, "size_gb": 9.25, "table2": {"group": "open_sky", "col": 1}
+    },
+    "Varying-illu05": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Varying-illu05", "cloud_layout": "parts",
+      "checksum_key": "Visual_Challenge\\outdoor\\Varying-illu05.bag",
+      "sha256": "C481B19AAA488A397CCD171CBC5F989E076E546B4D1AB5ADCD2B2C6631CEBE7B",
+      "gt": "Visual_Challenge/Outdoor/Varying-illu05.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-13", "duration_s": 491, "size_gb": 7.11, "table2": {"group": "open_sky", "col": 2}
+    },
+    "Outdoor01": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Standard/Outdoor01", "cloud_layout": "parts",
+      "checksum_key": "Standard\\Outdoor01.bag",
+      "sha256": "00A270807BCA336BC5191320B9D453CEFEF76507850286E91063BC726C3775C8",
+      "sha256_alt": {"Standard\\Outdoor01.orig.bag": "9D9F17BD40D3A2721A9780D0861147A19ED21FDEB3CE1686A8A059EA70CB7C0E"},
+      "known_defect": "A3: the Alipan copy matches neither official sha256, is unindexed and has ~7 MB corrupt near byte 4240446091; tools/repair_bag.py + reindex leave a ~0.5 s gap in every topic at t-t0 ~ 262.5 s (the repaired copy is data/m3dgr/bags/Outdoor01.bag)",
+      "gt": "Standard/Outdoor01.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-03", "duration_s": 411, "size_gb": 6.10, "table2": {"group": "open_sky", "col": 3}
+    },
+    "Outdoor04": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Standard/Outdoor04", "cloud_layout": "parts",
+      "checksum_key": "Standard\\Outdoor04.bag",
+      "sha256": "FC1848DD1941AF203858BA08D9C910E97A7ABA18896E18A3D705BBD42FC7C06E",
+      "gt": "Standard/Outdoor04.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-03", "duration_s": 782, "size_gb": 13.4, "table2": {"group": "open_sky", "col": 4}
+    },
+    "Dark01": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Dark01.exe", "cloud_layout": "single",
+      "checksum_key": "Visual_Challenge\\outdoor\\Dark01.bag",
+      "sha256": "9F43A8A56DF39B338728199646F2E5A6A4E972109FB925ABD1A3B42C46AD19DB",
+      "gt": "Visual_Challenge/Outdoor/Dark01.txt", "gt_kind": "rtk",
+      "date_local": "2024-11-25", "duration_s": 206, "size_gb": 2.21, "table2": {"group": "gnss_denied", "col": 5}
+    },
+    "Dark02": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Dark02", "cloud_layout": "parts",
+      "checksum_key": "Visual_Challenge\\outdoor\\Dark02.bag",
+      "sha256": "4B2361911838DD871E9CCB67CD167A30D8CB6B8C5136B2BBB0D9D70E6F686C41",
+      "gt": "Visual_Challenge/Outdoor/Dark02.txt", "gt_kind": "rtk",
+      "date_local": "2024-11-25", "duration_s": 710, "size_gb": 7.57, "table2": {"group": "gnss_denied", "col": 6}
+    },
+    "GNSS-denial01": {
+      "class": "evaluation", "cloud": "/来自分享/GNSS-denial01", "cloud_layout": "parts",
+      "cloud_note": "not in the first imported share (/来自分享/Dataset/GNSS_Denied has only GNSS-denial02); M3DGR README:399 lists a separate Alipan share https://www.alipan.com/s/KafsJdSFrYz, imported by the user on 2026-09-26: it lands at /来自分享/GNSS-denial01, not under /来自分享/Dataset/ (AMENDMENTS A68)",
+      "checksum_key": "GNSS_Denied\\GNSS-denial01.bag",
+      "sha256": "942E560ED7DEE3FB3F01317D92AA906790771C16C91B2C943DD800C4F77030FB",
+      "gt": "GNSS_Denied/GNSS-denial01/GTGNSS-denial01.txt", "gt_kind": "aruco",
+      "date_local": "2025-01-19", "duration_s": 609, "size_gb": 10.5, "table2": null
+    },
+    "GNSS-denial02": {
+      "class": "evaluation", "cloud": "/来自分享/Dataset/GNSS_Denied/GNSS-denial02", "cloud_layout": "parts",
+      "checksum_key": "GNSS_Denied\\GNSS-denial02.bag",
+      "sha256": "2BC4EB1506BAA706D0AC000D02E96711A0CF99D27D05A890A35774645CD52CE4",
+      "gt": "GNSS_Denied/GNSS-denial02/GTGNSS-denial02.txt", "gt_kind": "aruco",
+      "date_local": "2025-01-21", "duration_s": 750, "size_gb": 12.7, "table2": null
+    },
+    "Grass01": {
+      "class": "development", "cloud": "/来自分享/Dataset/Wheel_Slippage/Outdoor/Grass01", "cloud_layout": "parts",
+      "checksum_key": "Wheel_Slippage\\outdoor\\Grass01.bag",
+      "sha256": "67B3E299920696D041E8937636F64515CDB62F8E93D827D9B8431A5572D9109A",
+      "gt": "Wheel_Slippage/Outdoor/Grass01.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-19", "duration_s": 287, "size_gb": 6.12, "table2": null
+    },
+    "Grass02": {
+      "class": "development", "cloud": "/来自分享/Dataset/Wheel_Slippage/Outdoor/Grass02.exe", "cloud_layout": "single",
+      "checksum_key": "Wheel_Slippage\\outdoor\\Grass02.bag",
+      "sha256": "00734D4679AC688918E42212A73E23D5352D926419B876A8130186DABA43F5AA",
+      "gt": "Wheel_Slippage/Outdoor/Grass02.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-21", "duration_s": 172, "size_gb": 3.58, "table2": null
+    },
+    "Z-Rough-Road01": {
+      "class": "development", "cloud": "/来自分享/Dataset/Wheel_Slippage/Outdoor/Z-Rough-Road01", "cloud_layout": "parts",
+      "cloud_note": "AMENDMENTS A69 item 3 / A70: the long open-sky development sequence (not in the evaluation set); 4 pieces, 7.81 GiB. date_local = the GT's first stamp in UTC+8; duration_s and size_gb = the fetched bag (533.6 s, 11 160 690 682 bytes), not the README table",
+      "checksum_key": "Wheel_Slippage\\outdoor\\Z-Rough-Road01.bag",
+      "sha256": "F1972B684D8E216C0FDFA9BB94D9CBD005DA62425354BA3A68C7AB2C2FFDD0C9",
+      "gt": "Wheel_Slippage/Outdoor/Z-Rough-Road01.txt", "gt_kind": "rtk",
+      "date_local": "2025-01-14", "duration_s": 533, "size_gb": 11.16, "table2": null
+    },
+    "Occlusion03": {
+      "class": "development", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Occlusion03.exe", "cloud_layout": "single",
+      "checksum_key": "Visual_Challenge\\outdoor\\Occlusion03.bag",
+      "sha256": "DC89BAA5E73AA74623936D61692B0DE6AF502E0203B2A7F6487070B8731054FC",
+      "known_defect": "A26: the official bag is unindexed and truncated (242 s of the 397 s GT)",
+      "gt": "Visual_Challenge/Outdoor/Occlusion03.txt", "gt_kind": "rtk",
+      "date_local": "2024-12-01", "duration_s": 396, "size_gb": 4.00, "table2": null
+    },
+    "Occlusion04": {
+      "class": "development", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Occlusion04.exe", "cloud_layout": "single",
+      "checksum_key": "Visual_Challenge\\outdoor\\Occlusion04.bag",
+      "sha256": "BA0CAA91D45040C1C27841A0273513FE6AE41814D3B92711AFB8ECB9B29C6E6C",
+      "gt": "Visual_Challenge/Outdoor/Occlusion04.txt", "gt_kind": "rtk",
+      "date_local": "2024-12-01", "duration_s": 542, "size_gb": 5.27, "table2": null
+    },
+    "Dynamic03": {
+      "class": "development", "cloud": "/来自分享/Dataset/Visual_Challenge/Outdoor/Dynamic03.exe", "cloud_layout": "single",
+      "checksum_key": "Visual_Challenge\\outdoor\\Dynamic03.bag",
+      "sha256": "A54B687A924EE4E9B30673F85D88AC73615A10FCE4A7AB40F6099C24283BCC78",
+      "gt": "Visual_Challenge/Outdoor/Dynamic03.txt", "gt_kind": "rtk",
+      "date_local": "2024-12-06", "duration_s": 284, "size_gb": 3.20, "table2": null
+    },
+    "Data01_20240707_100C_CAR_complex": {
+      "class": "development", "dataset": "smartpnt_mini", "lidar": "smartpnt_mini", "portal": "00_MINI/Data01_20240707_100C_CAR_complex",
+      "mini_receiver": "01_ROVE/02_mini/ROVE_02.24o", "gt_file": "ROVE_02_GroundTruth.ref", "gt_kind": "rtk", "gt_reference_point": "Ant00 (the mini's GNSS antenna phase centre)",
+      "bag": "smartpnt/bags/Data01_20240707_100C_CAR_complex.bag", "gt_dir": "audit/Data01_20240707_100C_CAR_complex/gt",
+      "date_local": "2024-07-07", "duration_s": 2090, "table2": null,
+      "note": "A80 development: street trees, the mini receiver's RTCM3 log converted to RINEX 3.03 (10 Hz)"
+    },
+    "Data02_20240718_100C_CAR_complex": {
+      "class": "development", "dataset": "smartpnt_mini", "lidar": "smartpnt_mini", "portal": "00_MINI/Data02_20240718_100C_CAR_complex",
+      "mini_receiver": "01_ROVE/03_mini/ROVE_03.24o", "gt_file": "Mini_GroundTruth.ref", "gt_kind": "rtk", "gt_reference_point": "Ant00 (the mini's GNSS antenna phase centre)",
+      "bag": "smartpnt/bags/Data02_20240718_100C_CAR_complex.bag", "gt_dir": "audit/Data02_20240718_100C_CAR_complex/gt",
+      "date_local": "2024-07-18", "duration_s": 2214, "table2": null,
+      "note": "A80 development"
+    },
+    "Data01_20240719_100C_CAR_opensky": {
+      "class": "evaluation", "dataset": "smartpnt_mini", "lidar": "smartpnt_mini", "portal": "00_MINI/Data01_20240719_100C_CAR_opensky",
+      "mini_receiver": "01_ROVE/03_mini/ROVE_03.24o", "gt_file": "Mini_GroundTruth.ref", "gt_kind": "rtk", "gt_reference_point": "Ant00 (the mini's GNSS antenna phase centre)",
+      "bag": "smartpnt/bags/Data01_20240719_100C_CAR_opensky.bag", "gt_dir": "audit/Data01_20240719_100C_CAR_opensky/gt",
+      "date_local": "2024-07-19", "duration_s": 3994, "table2": null,
+      "note": "A80 evaluation, the open-sky one"
+    },
+    "Data00_20240703_100C_CAR_complex": {
+      "class": "evaluation", "dataset": "smartpnt_mini", "lidar": "smartpnt_mini", "portal": "00_MINI/Data00_20240703_100C_CAR_complex",
+      "mini_receiver": "01_ROVE/02_mini/ROVE_02.24o", "gt_file": "ROVE_02_GroundTruth.ref", "gt_kind": "rtk", "gt_reference_point": "Ant00 (the mini's GNSS antenna phase centre)",
+      "bag": "smartpnt/bags/Data00_20240703_100C_CAR_complex.bag", "gt_dir": "audit/Data00_20240703_100C_CAR_complex/gt",
+      "date_local": "2024-07-03", "duration_s": 2364, "table2": null,
+      "note": "A80 evaluation"
+    },
+    "Data00_20240706_100C_CAR_complex": {
+      "class": "evaluation", "dataset": "smartpnt_mini", "lidar": "smartpnt_mini", "portal": "00_MINI/Data00_20240706_100C_CAR_complex",
+      "mini_receiver": "01_ROVE/02_mini/ROVE_02.24o", "gt_file": "ROVE_02_GroundTruth.ref", "gt_kind": "rtk", "gt_reference_point": "Ant00 (the mini's GNSS antenna phase centre)",
+      "bag": "smartpnt/bags/Data00_20240706_100C_CAR_complex.bag", "gt_dir": "audit/Data00_20240706_100C_CAR_complex/gt",
+      "date_local": "2024-07-06", "duration_s": 3271, "table2": null,
+      "note": "A80 evaluation; crosses the GPST midnight (files named UTC 07-05 23:57 .. 07-06 00:50)"
+    },
+    "HKisland_GNSS03": {
+      "class": "development", "dataset": "mars_lvig", "lidar": "mars_avia",
+      "source": "https://hf-mirror.com/datasets/swd123456/HKisland_GNSS03_Dataset_from_MARS-LVIG/resolve/main/HKisland_GNSS03.bag",
+      "sha256": "8ce44d1d6338b7610a2120094f3ec11483c23dd7c5a368870820c06e0c5dc317", "sha256_kind": "the hub's LFS oid (x-linked-etag); the received bytes match it",
+      "gt_kind": "rtk", "gt_reference_point": "DJI M300 RTK antenna (position only)",
+      "bag": "mars/bags/HKisland_GNSS03.bag", "gt_dir": "audit/HKisland_GNSS03/gt",
+      "date_local": "2023-10-24", "duration_s": 391, "table2": null,
+      "note": "A80 pipeline-debug sequence, development only"
+    }
+  }
+}

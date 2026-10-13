@@ -1,0 +1,15 @@
+build/
+build_core/
+build_preview/
+devel/
+.venv/
+.venv-preview/
+__pycache__/
+.pytest_cache/
+*.pyc
+Log/
+preview-output/
+*.bag
+*.db3
+*.so
+*.a

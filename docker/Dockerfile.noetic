@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Historical local ROS build recipe; no image is distributed or certified by the preview.
+# Build context must contain strasdat/Sophus at a621ff2 as Sophus/.
+# For the supported ROS-free public path see docs/REPRODUCING.md.
+FROM ros:noetic-ros-base-focal
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+# 国内镜像:ubuntu 与 ROS 源都走清华
+RUN sed -i "s#http://archive.ubuntu.com/ubuntu#https://mirrors.tuna.tsinghua.edu.cn/ubuntu#g; s#http://security.ubuntu.com/ubuntu#https://mirrors.tuna.tsinghua.edu.cn/ubuntu#g" /etc/apt/sources.list \
+ && sed -i "s#http://packages.ros.org/ros/ubuntu#https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu#g" /etc/apt/sources.list.d/ros1-latest.list || true
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential cmake git wget gnupg2 lsb-release ca-certificates \
+      libboost-all-dev libeigen3-dev libpcl-dev libopencv-dev \
+      libgoogle-glog-dev libyaml-cpp-dev libgtest-dev \
+      python3-catkin-tools python3-osrf-pycommon python3-pip python3-numpy python3-yaml \
+      ros-noetic-cv-bridge ros-noetic-pcl-ros ros-noetic-pcl-conversions \
+      ros-noetic-tf ros-noetic-eigen-conversions \
+      ros-noetic-image-transport ros-noetic-image-transport-plugins \
+      ros-noetic-rosbag ros-noetic-rosbag-storage ros-noetic-visualization-msgs ros-noetic-cmake-modules \
+      ros-noetic-rviz ros-noetic-topic-tools \
+    && rm -rf /var/lib/apt/lists/*
+# Sophus 非模板版(FAST-LIVO2 要求),gnu++98 绕开该 commit 在新标准下的编译错误
+COPY Sophus /opt/Sophus
+RUN cmake -S /opt/Sophus -B /opt/Sophus/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=gnu++98 -DBUILD_TESTS=OFF \
+ && cmake --build /opt/Sophus/build --parallel $(nproc) && cmake --build /opt/Sophus/build --target install && ldconfig
+ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/ros/noetic/lib
+# ---- 以下为 GNSS 骨架新增层(valgrind 审计、评测工具、回放依赖) ----
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      valgrind patch rsync \
+      python3-scipy python3-matplotlib \
+      ros-noetic-compressed-image-transport ros-noetic-diagnostic-msgs ros-noetic-roslz4 \
+    && rm -rf /var/lib/apt/lists/*
+# evo(ATE/RPE 评测)、rosbags(纯 Python bag 读取,tools/ 用)、pymap3d(大地坐标换算);清华 pypi 源
+RUN pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple \
+      "evo>=1.20,<2" "rosbags>=0.9,<0.11" "pymap3d>=3,<4"
+WORKDIR /ws
+CMD ["bash"]

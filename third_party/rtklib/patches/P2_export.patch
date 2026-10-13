@@ -1,0 +1,158 @@
+livo patch P2 (DESIGN §12.1, RESOLVED R2-6/R2-12, AMENDMENTS A9-4) — exports of pntpos.c internals.
+
+Purpose
+  * pntpos.c end: rtkx_prange/rtkx_varerr/rtkx_gettgd wrap the static prange() (:110-191), varerr() (:51-76)
+    and gettgd() (:78-94) unchanged, so U5 can reconstruct RTKLIB's pseudorange prediction (P_corr - ssat.resp).
+  * estpos() (:401-470) and estvel() (:598-632) keep only the position block (sol->qr) and drop the clock
+    drift x[3] of estvel; the patch copies their converged state x, the linearisation point of the last
+    iteration (where ssat.resp/azel were evaluated) and the full LSQ covariance Q into file-scope buffers.
+    raim_fde() (:472-547) remembers the subset it keeps; pntpos() (:646-715) publishes the state behind the
+    solution it returns; rtkx_lastsol() hands it out (livo_gnss rtk::SppRef, SppRefResult x/Q).
+  * rtklib.h: declarations after pntpos() and `#define RTKX_P2 1` so rtk_adapter.cpp compiles the export
+    users only against a patched tree (the LIVO_RTKLIB_APPLY_PATCHES=OFF golden build has neither).
+Numerics: only copies are added; no value inside pntpos() is changed (U5 PatchedPntposEqualsUnpatchedGolden).
+Not reentrant (file-scope buffers), like the rest of RTKLIB's global state; livo_gnss calls it from one thread.
+Generated against upstream + P1 (applied in file-name order).
+
+--- a/src/rtklib.h
++++ b/src/rtklib.h
+@@ -1873,6 +1873,32 @@
+                   const prcopt_t *opt, sol_t *sol, double *azel,
+                   ssat_t *ssat, char *msg);
+ 
++/* livo P2: exports of pntpos.c internals (static upstream). Pure additions: the
++ * static functions are wrapped unchanged and estpos()/estvel() only copy their
++ * converged state, so pntpos() results are bit-identical to the unpatched build. */
++#define RTKX_P2     1                   /* livo P2 exports are compiled in */
++#define RTKX_MAXNX  16                  /* capacity of the exported state */
++typedef struct {        /* one least-squares estimate of the last pntpos() */
++    int valid;          /* 1: converged and accepted by pntpos() */
++    int nx;             /* state size (estpos: NX=9, estvel: 4) */
++    int nv;             /* rows of the last iteration (incl. rank constraints) */
++    int ns;             /* satellites used (estpos only) */
++    double x[RTKX_MAXNX];    /* final state (after the last update) */
++    double xlin[RTKX_MAXNX]; /* linearisation point of the last iteration: */
++                             /* ssat.resp/azel were evaluated here */
++    double Q[RTKX_MAXNX*RTKX_MAXNX]; /* covariance of the last iteration (nx*nx) */
++} rtkx_est_t;
++typedef struct {        /* full states of the last pntpos() call */
++    rtkx_est_t pos;     /* estpos: x={x,y,z,dtr,glo,gal,bds,irn,qzs} (m) */
++    rtkx_est_t vel;     /* estvel: x={vx,vy,vz,ddtr} (m/s) */
++} rtkx_sol_t;
++EXPORT double rtkx_prange(const obsd_t *obs, const nav_t *nav,
++                          const prcopt_t *opt, double *var);
++EXPORT double rtkx_varerr(const prcopt_t *opt, const obsd_t *obs, double el,
++                          int sys);
++EXPORT double rtkx_gettgd(int sat, const nav_t *nav, int type);
++EXPORT void rtkx_lastsol(rtkx_sol_t *sol);
++
+ /* precise positioning -------------------------------------------------------*/
+ EXPORT void rtkinit(rtk_t *rtk, const prcopt_t *opt);
+ EXPORT void rtkfree(rtk_t *rtk);
+--- a/src/pntpos.c
++++ b/src/pntpos.c
+@@ -47,6 +47,20 @@
+ #define MIN_EL      (5.0*D2R)   /* min elevation for measurement error (rad) */
+ # define MAX_GDOP   30          /* max gdop for valid solution  */
+ 
++/* livo P2: full-state export buffers (copies only, never read back here) */
++static rtkx_est_t rtkx_pos_cur;  /* last converged estpos() */
++static rtkx_est_t rtkx_pos_raim; /* estpos() of the subset raim_fde() kept */
++static rtkx_sol_t rtkx_out;      /* states behind the last pntpos() result */
++
++static void rtkx_save(rtkx_est_t *e, const double *x, const double *Q, int nx,
++                      int nv, int ns)
++{
++    int i;
++    e->valid=1; e->nx=nx; e->nv=nv; e->ns=ns;
++    for (i=0;i<nx;i++) e->x[i]=x[i];
++    for (i=0;i<nx*nx;i++) e->Q[i]=Q[i];
++}
++
+ /* pseudorange measurement error variance ------------------------------------*/
+ static double varerr(const prcopt_t *opt, const obsd_t *obs, double el, int sys)
+ {
+@@ -434,9 +448,11 @@
+             break;
+         }
+         for (j=0;j<NX;j++) {
++            rtkx_pos_cur.xlin[j]=x[j]; /* livo P2 */
+             x[j]+=dx[j];
+         }
+         if (norm(dx,NX)<1E-4) {
++            rtkx_save(&rtkx_pos_cur,x,Q,NX,nv,ns); /* livo P2 */
+             sol->type=0;
+             sol->time=timeadd(obs[0].time,-x[3]/CLIGHT);
+             sol->dtr[0]=x[3]/CLIGHT; /* receiver clock bias (s) */
+@@ -527,6 +543,7 @@
+             resp[j]=resp_e[k++];
+         }
+         stat=1;
++        rtkx_pos_raim=rtkx_pos_cur; /* livo P2 */
+         sol_e.eventime = sol->eventime;
+         *sol=sol_e;
+         sat=obs[i].sat;
+@@ -614,9 +631,13 @@
+         /* least square estimation */
+         if (lsq(H,v,4,nv,dx,Q)) break;
+         
+-        for (j=0;j<4;j++) x[j]+=dx[j];
++        for (j=0;j<4;j++) {
++            rtkx_out.vel.xlin[j]=x[j]; /* livo P2 */
++            x[j]+=dx[j];
++        }
+         
+         if (norm(dx,4)<1E-6) {
++            rtkx_save(&rtkx_out.vel,x,Q,4,nv,0); /* livo P2 */
+             trace(3,"estvel : vx=%.3f vy=%.3f vz=%.3f, n=%d\n",x[0],x[1],x[2],n);
+             matcpy(sol->rr+3,x,3,1);
+             sol->qv[0]=(float)Q[0];  /* xx */
+@@ -655,6 +676,7 @@
+     trace(3,"pntpos  : tobs=%s n=%d\n",time2str(obs[0].time,tstr,3),n);
+     
+     sol->stat=SOLQ_NONE;
++    memset(&rtkx_out,0,sizeof(rtkx_out)); /* livo P2 */
+     
+     if (n<=0) {
+         strcpy(msg,"no observation data");
+@@ -684,10 +706,12 @@
+     
+     /* estimate receiver position and time with pseudorange */
+     stat=estpos(obs,n,rs,dts,var,svh,nav,&opt_,sol,azel_,vsat,resp,msg);
++    if (stat) rtkx_out.pos=rtkx_pos_cur; /* livo P2 */
+     
+     /* RAIM FDE */
+     if (!stat&&n>=6&&opt->posopt[4]) {
+         stat=raim_fde(obs,n,rs,dts,var,svh,nav,&opt_,ssat,sol,azel_,vsat,resp,msg);
++        if (stat) rtkx_out.pos=rtkx_pos_raim; /* livo P2 */
+     }
+     /* estimate receiver velocity with Doppler */
+     if (stat) {
+@@ -713,3 +737,27 @@
+     free(rs); free(dts); free(var); free(azel_); free(resp);
+     return stat;
+ }
++/* livo P2 exports (DESIGN 12.1) ---------------------------------------------
++* rtkx_prange/rtkx_varerr/rtkx_gettgd : the static prange()/varerr()/gettgd()
++* rtkx_lastsol : full estpos/estvel states behind the last pntpos() result
++*                (pos.valid/vel.valid = 0 when that stage did not succeed)
++* not reentrant, like pntpos() itself (file-scope buffers)
++*-----------------------------------------------------------------------------*/
++extern double rtkx_prange(const obsd_t *obs, const nav_t *nav,
++                          const prcopt_t *opt, double *var)
++{
++    return prange(obs,nav,opt,var);
++}
++extern double rtkx_varerr(const prcopt_t *opt, const obsd_t *obs, double el,
++                          int sys)
++{
++    return varerr(opt,obs,el,sys);
++}
++extern double rtkx_gettgd(int sat, const nav_t *nav, int type)
++{
++    return gettgd(sat,nav,type);
++}
++extern void rtkx_lastsol(rtkx_sol_t *sol)
++{
++    *sol=rtkx_out;
++}

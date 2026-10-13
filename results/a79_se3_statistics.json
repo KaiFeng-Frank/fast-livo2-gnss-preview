@@ -1,0 +1,736 @@
+{
+  "schema": "fastlivo-gnss.se3-statistics.v1",
+  "kind": "aggregate_scoring_algebra_check",
+  "full_trajectory_reproduction": false,
+  "notes": "Statistics are formed from the already selected historical GT/estimate pairs. SVD/RMSE checks the final SE3 scoring algebra; it does not redo GT conversion, association, masking, activation or a replay.",
+  "records": [
+    {
+      "sequence": "Varying-illu03",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 7149,
+      "centered_estimate_squared_norm_sum_m2": 236352848.61764744,
+      "centered_reference_squared_norm_sum_m2": 236426295.8897643,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          132189820.31688365,
+          -23289913.10274388,
+          69096377.77404492
+        ],
+        [
+          -55952942.590812445,
+          83703312.69156232,
+          -30710739.786613543
+        ],
+        [
+          849675.493757012,
+          -915492.169181637,
+          458675.9433250965
+        ]
+      ],
+      "expected_rmse_m": 1.72136270816144
+    },
+    {
+      "sequence": "Varying-illu03",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 7149,
+      "centered_estimate_squared_norm_sum_m2": 236679690.00432605,
+      "centered_reference_squared_norm_sum_m2": 236426295.8897643,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          132277840.15976983,
+          -23315226.4384176,
+          69143556.22511959
+        ],
+        [
+          -55976775.09630132,
+          83769119.49477786,
+          -30723458.905690417
+        ],
+        [
+          850118.4943869744,
+          -916238.1581289619,
+          458911.9127799262
+        ]
+      ],
+      "expected_rmse_m": 1.7148140211287328
+    },
+    {
+      "sequence": "Varying-illu03",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 7149,
+      "centered_estimate_squared_norm_sum_m2": 235524181.25928468,
+      "centered_reference_squared_norm_sum_m2": 236426295.8897643,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          142598802.8304371,
+          -48721647.885654055,
+          1132594.2296344263
+        ],
+        [
+          -48480273.528640606,
+          93292436.04331636,
+          -3287950.602397381
+        ],
+        [
+          793007.4242909511,
+          -1066724.7078736897,
+          35580.104807641444
+        ]
+      ],
+      "expected_rmse_m": 2.3041537591035506
+    },
+    {
+      "sequence": "Varying-illu03",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 7149,
+      "centered_estimate_squared_norm_sum_m2": 235850305.6448248,
+      "centered_reference_squared_norm_sum_m2": 236426295.8897643,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          142692667.91803542,
+          -48763574.58037233,
+          1135385.987468684
+        ],
+        [
+          -48495414.56848281,
+          93362077.8302018,
+          -3289759.177514055
+        ],
+        [
+          793371.6983407373,
+          -1067547.2093499082,
+          35604.34922793318
+        ]
+      ],
+      "expected_rmse_m": 2.274239005043383
+    },
+    {
+      "sequence": "Varying-illu04",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 4669,
+      "centered_estimate_squared_norm_sum_m2": 47283030.66992515,
+      "centered_reference_squared_norm_sum_m2": 47220296.422507524,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          11867002.631243587,
+          35318691.01273307,
+          5644704.4356986545
+        ],
+        [
+          -5791839.862023446,
+          8786941.753167626,
+          -3023692.865919346
+        ],
+        [
+          10372.459898317802,
+          -310113.35279131966,
+          10203.052125807299
+        ]
+      ],
+      "expected_rmse_m": 0.3544155973863233
+    },
+    {
+      "sequence": "Varying-illu04",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 4669,
+      "centered_estimate_squared_norm_sum_m2": 47277543.476018086,
+      "centered_reference_squared_norm_sum_m2": 47220296.422507524,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          11885751.03738667,
+          35315010.00552669,
+          5654727.351567373
+        ],
+        [
+          -5786668.090043613,
+          8777967.19493211,
+          -3020971.854129252
+        ],
+        [
+          10181.92307325884,
+          -309774.674909416,
+          10102.601401494425
+        ]
+      ],
+      "expected_rmse_m": 0.35321467445157867
+    },
+    {
+      "sequence": "Varying-illu04",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 4669,
+      "centered_estimate_squared_norm_sum_m2": 47280374.42469327,
+      "centered_reference_squared_norm_sum_m2": 47220296.422507524,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          37428629.30089319,
+          4304944.621429943,
+          -394894.7605176159
+        ],
+        [
+          4890686.3192505855,
+          9811824.402646484,
+          -129033.43082052488
+        ],
+        [
+          -270404.50909494044,
+          -153036.68211581872,
+          5547.601331206512
+        ]
+      ],
+      "expected_rmse_m": 0.40724431721418486
+    },
+    {
+      "sequence": "Varying-illu04",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 4669,
+      "centered_estimate_squared_norm_sum_m2": 47274730.701205984,
+      "centered_reference_squared_norm_sum_m2": 47220296.422507524,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          37434949.69923959,
+          4284336.55317864,
+          -394283.9688463934
+        ],
+        [
+          4885307.192265742,
+          9802545.276926467,
+          -128893.74372571123
+        ],
+        [
+          -270199.7037205494,
+          -152691.49788553274,
+          5542.177747896756
+        ]
+      ],
+      "expected_rmse_m": 0.38166691925636054
+    },
+    {
+      "sequence": "Varying-illu05",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 3379,
+      "centered_estimate_squared_norm_sum_m2": 38666377.4420173,
+      "centered_reference_squared_norm_sum_m2": 38599424.81015815,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          5331482.920983798,
+          23940576.663867947,
+          2332125.997120495
+        ],
+        [
+          -9211478.365485243,
+          -23846500.006194584,
+          -4430399.525570838
+        ],
+        [
+          6257.53132404967,
+          -21743.85391228311,
+          3892.0451846631154
+        ]
+      ],
+      "expected_rmse_m": 0.24996994843224568
+    },
+    {
+      "sequence": "Varying-illu05",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 3379,
+      "centered_estimate_squared_norm_sum_m2": 38738071.20660694,
+      "centered_reference_squared_norm_sum_m2": 38599424.81015815,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          5340788.441758501,
+          23962039.19282848,
+          2336571.0886758734
+        ],
+        [
+          -9224549.66262587,
+          -23865143.16637792,
+          -4436954.11593974
+        ],
+        [
+          6260.59874961778,
+          -21769.915565288113,
+          3894.313023085561
+        ]
+      ],
+      "expected_rmse_m": 0.29572438145525615
+    },
+    {
+      "sequence": "Varying-illu05",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 3379,
+      "centered_estimate_squared_norm_sum_m2": 38423005.74487114,
+      "centered_reference_squared_norm_sum_m2": 38599424.81015815,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          18557201.88740217,
+          -16074172.992050134,
+          -225222.16512801885
+        ],
+        [
+          -16439971.946672583,
+          19950678.421497446,
+          193531.1639576349
+        ],
+        [
+          -22681.139726110927,
+          3386.165714288769,
+          320.3781661460265
+        ]
+      ],
+      "expected_rmse_m": 0.29966574251332817
+    },
+    {
+      "sequence": "Varying-illu05",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 3379,
+      "centered_estimate_squared_norm_sum_m2": 38494670.02857209,
+      "centered_reference_squared_norm_sum_m2": 38599424.81015815,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          18571559.748647496,
+          -16093252.35336142,
+          -225511.70859805288
+        ],
+        [
+          -16449831.819271961,
+          19972305.617610935,
+          193723.23234576636
+        ],
+        [
+          -22706.094418943343,
+          3394.8682882123644,
+          320.8338235996486
+        ]
+      ],
+      "expected_rmse_m": 0.22380275039046604
+    },
+    {
+      "sequence": "Outdoor01",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 2857,
+      "centered_estimate_squared_norm_sum_m2": 5766039.619884847,
+      "centered_reference_squared_norm_sum_m2": 5743451.346377638,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          -4681384.082137722,
+          393527.54938240594,
+          -2467275.385543157
+        ],
+        [
+          840355.723703312,
+          -436294.63330289454,
+          427493.44604821864
+        ],
+        [
+          169.87252424765336,
+          3933.674911807199,
+          284.73066052807303
+        ]
+      ],
+      "expected_rmse_m": 0.28491545729695167
+    },
+    {
+      "sequence": "Outdoor01",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 2857,
+      "centered_estimate_squared_norm_sum_m2": 5756467.025451295,
+      "centered_reference_squared_norm_sum_m2": 5743451.346377638,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          -4679092.899725799,
+          393876.4434431425,
+          -2466052.1684203697
+        ],
+        [
+          840726.8957130644,
+          -434125.80436610844,
+          427755.21824808174
+        ],
+        [
+          166.18752028322712,
+          3923.713586869326,
+          282.5842780859706
+        ]
+      ],
+      "expected_rmse_m": 0.21324455955264981
+    },
+    {
+      "sequence": "Outdoor01",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 2857,
+      "centered_estimate_squared_norm_sum_m2": 5757567.0812679175,
+      "centered_reference_squared_norm_sum_m2": 5743451.346377638,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          5227074.912528479,
+          -903362.6920667882,
+          -35865.404138639424
+        ],
+        [
+          -897879.2363656249,
+          523174.6042972206,
+          3749.732156374949
+        ],
+        [
+          -650.3447878165068,
+          -3816.427574798399,
+          63.3761091048338
+        ]
+      ],
+      "expected_rmse_m": 0.22444805859007597
+    },
+    {
+      "sequence": "Outdoor01",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 2857,
+      "centered_estimate_squared_norm_sum_m2": 5748060.523109258,
+      "centered_reference_squared_norm_sum_m2": 5743451.346377638,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          5224464.100548828,
+          -903463.7328442159,
+          -35840.35071827164
+        ],
+        [
+          -898534.892260635,
+          521057.1965927421,
+          3745.2614542967267
+        ],
+        [
+          -645.0773356198893,
+          -3806.9351035519708,
+          63.465496660801094
+        ]
+      ],
+      "expected_rmse_m": 0.18224097677273116
+    },
+    {
+      "sequence": "Outdoor04",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 6796,
+      "centered_estimate_squared_norm_sum_m2": 39474285.82121106,
+      "centered_reference_squared_norm_sum_m2": 39388299.24461128,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          4297650.245529194,
+          1199058.5069967604,
+          2236415.0603383593
+        ],
+        [
+          -1657266.7376133716,
+          34390537.152685076,
+          -2168513.3694969947
+        ],
+        [
+          13077.395047866245,
+          -576743.7907314058,
+          28667.978542838657
+        ]
+      ],
+      "expected_rmse_m": 0.2779810561688356
+    },
+    {
+      "sequence": "Outdoor04",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 6796,
+      "centered_estimate_squared_norm_sum_m2": 39507813.12369324,
+      "centered_reference_squared_norm_sum_m2": 39388299.24461128,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          4303710.721686033,
+          1199932.90769766,
+          2239622.565338058
+        ],
+        [
+          -1652151.9840178841,
+          34401056.71121106,
+          -2166025.616350498
+        ],
+        [
+          12996.44971322978,
+          -576873.4310606625,
+          28628.478837198007
+        ]
+      ],
+      "expected_rmse_m": 0.2245151799769621
+    },
+    {
+      "sequence": "Outdoor04",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 6796,
+      "centered_estimate_squared_norm_sum_m2": 39362419.24355063,
+      "centered_reference_squared_norm_sum_m2": 39388299.24461128,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          4931454.224524003,
+          729942.6626152776,
+          -33199.47807582536
+        ],
+        [
+          802200.5406420956,
+          34428499.947260685,
+          -826840.3548471578
+        ],
+        [
+          -29982.616534802182,
+          -575810.4183104326,
+          13980.419847813655
+        ]
+      ],
+      "expected_rmse_m": 0.3614119354159791
+    },
+    {
+      "sequence": "Outdoor04",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 6796,
+      "centered_estimate_squared_norm_sum_m2": 39395817.80836066,
+      "centered_reference_squared_norm_sum_m2": 39388299.24461128,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          4938377.44266093,
+          730145.5790977427,
+          -33173.361372950036
+        ],
+        [
+          808884.6593761934,
+          34438408.3984661,
+          -826997.2215068553
+        ],
+        [
+          -30084.966643702366,
+          -575930.4682862457,
+          13983.12171626187
+        ]
+      ],
+      "expected_rmse_m": 0.2953335649732045
+    },
+    {
+      "sequence": "Dark01",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 1599,
+      "centered_estimate_squared_norm_sum_m2": 439774.45411145006,
+      "centered_reference_squared_norm_sum_m2": 432660.41655605356,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          39358.6747257231,
+          -118573.18283047111,
+          18692.487220054412
+        ],
+        [
+          279661.4233513373,
+          -19576.105104481063,
+          149092.74095850476
+        ],
+        [
+          -2951.514828973527,
+          325.41767387829634,
+          -1567.1110460316897
+        ]
+      ],
+      "expected_rmse_m": 0.181165719523295
+    },
+    {
+      "sequence": "Dark01",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 1599,
+      "centered_estimate_squared_norm_sum_m2": 433840.6851332844,
+      "centered_reference_squared_norm_sum_m2": 432660.41655605356,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          39741.74110664854,
+          -116830.57331222238,
+          18922.631126865694
+        ],
+        [
+          278539.37725928886,
+          -18814.083606814707,
+          148488.7028188391
+        ],
+        [
+          -2938.6640198638943,
+          315.37068390009284,
+          -1560.3096780748435
+        ]
+      ],
+      "expected_rmse_m": 0.06620388228201635
+    },
+    {
+      "sequence": "Dark01",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 1599,
+      "centered_estimate_squared_norm_sum_m2": 439774.45411145006,
+      "centered_reference_squared_norm_sum_m2": 432660.41655605356,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          39358.6747257231,
+          -118573.18283047111,
+          18692.487220054412
+        ],
+        [
+          279661.4233513373,
+          -19576.105104481063,
+          149092.74095850476
+        ],
+        [
+          -2951.514828973527,
+          325.41767387829634,
+          -1567.1110460316897
+        ]
+      ],
+      "expected_rmse_m": 0.181165719523295
+    },
+    {
+      "sequence": "Dark01",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 1599,
+      "centered_estimate_squared_norm_sum_m2": 433840.6851332844,
+      "centered_reference_squared_norm_sum_m2": 432660.41655605356,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          39741.74110664854,
+          -116830.57331222238,
+          18922.631126865694
+        ],
+        [
+          278539.37725928886,
+          -18814.083606814707,
+          148488.7028188391
+        ],
+        [
+          -2938.6640198638943,
+          315.37068390009284,
+          -1560.3096780748435
+        ]
+      ],
+      "expected_rmse_m": 0.06620388228201635
+    },
+    {
+      "sequence": "Dark02",
+      "arm": "U",
+      "metric": "e1o",
+      "paired_rows": 5745,
+      "centered_estimate_squared_norm_sum_m2": 28449228.28678021,
+      "centered_reference_squared_norm_sum_m2": 28509752.662745163,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          1708415.5266921495,
+          -21470347.022752713,
+          1091889.2042515967
+        ],
+        [
+          5827770.469689261,
+          2637082.8591117114,
+          3148474.476666076
+        ],
+        [
+          -29206.751493462638,
+          -168021.39321107627,
+          -14532.104368485769
+        ]
+      ],
+      "expected_rmse_m": 0.25765694104323916
+    },
+    {
+      "sequence": "Dark02",
+      "arm": "U",
+      "metric": "e1c",
+      "paired_rows": 5745,
+      "centered_estimate_squared_norm_sum_m2": 28548789.680303015,
+      "centered_reference_squared_norm_sum_m2": 28509752.662745163,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          1703135.445196391,
+          -21497973.51091894,
+          1089114.669932609
+        ],
+        [
+          5849073.287914633,
+          2633938.1441361564,
+          3160291.778700046
+        ],
+        [
+          -29385.161783164207,
+          -168191.6877656881,
+          -14630.344062629714
+        ]
+      ],
+      "expected_rmse_m": 0.24314874743785547
+    },
+    {
+      "sequence": "Dark02",
+      "arm": "T",
+      "metric": "e1o",
+      "paired_rows": 5745,
+      "centered_estimate_squared_norm_sum_m2": 28449228.28678021,
+      "centered_reference_squared_norm_sum_m2": 28509752.662745163,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          1708415.5266921495,
+          -21470347.022752713,
+          1091889.2042515967
+        ],
+        [
+          5827770.469689261,
+          2637082.8591117114,
+          3148474.476666076
+        ],
+        [
+          -29206.751493462638,
+          -168021.39321107627,
+          -14532.104368485769
+        ]
+      ],
+      "expected_rmse_m": 0.25765694104323916
+    },
+    {
+      "sequence": "Dark02",
+      "arm": "T",
+      "metric": "e1c",
+      "paired_rows": 5745,
+      "centered_estimate_squared_norm_sum_m2": 28548789.680303015,
+      "centered_reference_squared_norm_sum_m2": 28509752.662745163,
+      "centered_reference_estimate_product_sum_m2": [
+        [
+          1703135.445196391,
+          -21497973.51091894,
+          1089114.669932609
+        ],
+        [
+          5849073.287914633,
+          2633938.1441361564,
+          3160291.778700046
+        ],
+        [
+          -29385.161783164207,
+          -168191.6877656881,
+          -14630.344062629714
+        ]
+      ],
+      "expected_rmse_m": 0.24314874743785547
+    }
+  ]
+}

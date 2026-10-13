@@ -1,0 +1,24 @@
+# LIVGO-literal with the paper's row strength (AMENDMENTS A80 section 4: the second pre-registered noise variant), development-set
+# arm, not an evaluation arm. Identical to LIVGO-literal.yaml except the row noise: every Doppler row has sigma_D = 0.05 m/s and every
+# TDCP row sigma_TDCP = 1 mm, fixed, plus only the IMU-bridge terms that no state carries (see LIVGO-v2-paper.yaml for the exact
+# content of the flat mode). No elevation, C/N0, receiver-std, kappa_AR, noise.scale or sigma_toff dependence; RAIM, DTW and the
+# initialisation keep the model. Everything else, including lambda_th 0 (collection setting, to be set on the development set), is
+# LIVGO-literal.yaml's.
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: post_vio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false, exclusive_with_tdcp: false}
+    tdcp: {interval_s: 0.1, max_span_s: 0.15, chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, paper_init: true, init_travel_m: 50.0, init_tilt_sigma_max_deg: 0.2,
+          frame_exact: true, freeze_yaw: true,
+          cn0_hard: true, cn0_min_dbhz: 35.0, el_min_deg: 15.0, primary_only: true, tdcp_raim_both_ends: true,
+          dtw_online: true, dtw_at_init: true, dtw_grid_s: 0.1, single_init: true,
+          lambda_source: lio, lambda_th: 0.0,
+          noise_mode: flat, flat_sigma_tdcp_m: 0.001, flat_sigma_dopp_mps: 0.05,
+          tdcp_gain_log: true}

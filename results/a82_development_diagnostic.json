@@ -1,0 +1,71 @@
+{
+  "schema": "fastlivo-gnss.a82-public-development-diagnostic.v1",
+  "recorded_date": "2026-10-03",
+  "kind": "historical_initial_development_diagnostic_not_final_evaluation",
+  "sequence": "Data02_20240718_100C_CAR_complex",
+  "dataset": "SmartPNT-MSF mini",
+  "seed": 0,
+  "source_record_sha256": "ae50bf40605d948c2dcea9d68f8b9d342100fbbcb85b7dd7d74145c55c89d397",
+  "verification_method": "Raw W/N_odom poses, independent quaternion action, nearest-time join and Kabsch SE3; no project imports",
+  "full_trajectory_reproduction_in_this_preview": false,
+  "truth": {
+    "timebase_method": "gpst",
+    "applied_shift_s": 0.0,
+    "mask_excluded_rows": 0,
+    "gt_rows": 1895,
+    "scoring_span_gpst_s": [
+      1721290023.0,
+      1721291917.0
+    ],
+    "fixed_gt_antenna_lever_imu_m": [
+      -0.118,
+      0.0,
+      0.12
+    ]
+  },
+  "arms": {
+    "U": {
+      "complete": true,
+      "attempts": 1,
+      "build_sha256": "81cafac177bdd813860bf97c306da6388829704f24541557fd75e0729dea41d0",
+      "config_sha256": "2d450d7a4f26db28bf2c279e2ee9df86b245556a14a230c9c95824ead3661437",
+      "e1c_m": 710.0217734375351,
+      "e1o_m": 709.9989771994127,
+      "independent_e1c_error_from_official_m": 2.2737367544323206e-13,
+      "paired_gt_rows": 1895,
+      "gnss_activated": false,
+      "activation_seconds_from_span_start": null,
+      "path_1hz": {
+        "ratio": 0.9993692766727529,
+        "gt_length_m": 19758.407837059833,
+        "est_length_m": 19745.945748327737,
+        "segments": 1894,
+        "skipped_segments": 0,
+        "absolute_delta_from_official_ratio": 0.0
+      },
+      "path_output": "traj_W"
+    },
+    "LIVGO-literal-paper-diag": {
+      "complete": true,
+      "attempts": 1,
+      "build_sha256": "81cafac177bdd813860bf97c306da6388829704f24541557fd75e0729dea41d0",
+      "config_sha256": "3d2e4bf2efb19980b2d67207c9c7580e6391c537efca9b69341411918dcc9e2d",
+      "e1c_m": 714.0274536816736,
+      "e1o_m": 714.0057059183129,
+      "independent_e1c_error_from_official_m": 9.094947017729282e-13,
+      "paired_gt_rows": 1895,
+      "gnss_activated": true,
+      "activation_seconds_from_span_start": 17.90399980545044,
+      "path_1hz": {
+        "ratio": 0.9988167830955544,
+        "gt_length_m": 19758.407837059833,
+        "est_length_m": 19735.029354902093,
+        "segments": 1894,
+        "skipped_segments": 0,
+        "absolute_delta_from_official_ratio": 5.229150445984487e-14
+      },
+      "path_output": "traj_N (global), distinct from traj_N_odom used for e1c/e1o"
+    }
+  },
+  "interpretation": "Large completed development ATE is confirmed by the archived independent raw-pose audit. Near-unity travelled distance does not constrain trajectory shape. This record is not a frozen final-arm performance result."
+}

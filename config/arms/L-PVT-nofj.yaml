@@ -1,0 +1,9 @@
+# Diagnostic arm L-PVT-nofj (AMENDMENTS A62; development set only, not an evaluation arm): arm L-PVT with the A61 F9
+# map-frame-jump detector switched off, everything else as L-PVT. Counterfactual of the A62 review.
+gnss:
+  enable: true
+  update_enable: true
+  mode: loose_pvt
+  update_slot: pre_lio
+  use: {psr: false, dopp: false, tdcp: false, pvt_vel: true}
+  integrity: {frame_jump: {enable: false}}

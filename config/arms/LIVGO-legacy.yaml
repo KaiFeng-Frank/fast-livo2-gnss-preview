@@ -1,0 +1,15 @@
+# Control for the III-C2 reading. Same arm as LIVGO.yaml except paper_init: false, so the frame
+# stays the existing activate() solution (yaw, phi = 0, configured lever) and is then frozen.
+# Dual-mode rejection is unchanged (translation-block lambda_min, lambda_th, window 10).
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false}
+    tdcp: {chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, lambda_th: 417825.7093, paper_init: false}

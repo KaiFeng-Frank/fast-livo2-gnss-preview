@@ -1,0 +1,8 @@
+# probe overlay: LiDAR -> I300 rotation with the gravity-observed tilt corrected (extrinsics.py --gravity-check of the static windows of
+# Data01_20240707 and Data02_20240718: the scans' ground normal and the accelerometer's up differ by 1.59 / 1.72 deg for the exact axis
+# permutation and by 0.09 / 0.09 deg after a 1.656 deg rotation about the vehicle's longitudinal axis); the yaw is the permutation's
+extrin_calib:
+  extrinsic_T: [0.03409574748, -0.000984651252, -5.065291449e-05]
+  extrinsic_R: [-0.001487998426, -0.02886678284, -0.9995821601, -8.283170182e-05, -0.9995832597, 0.02886693791, -0.9999988895, 0.0001257510496, 0.001484987232]
+  Rcl: [-0.05802772345, -0.998041416, 0.02336910773, 0.01810510463, -0.02445678482, -0.9995369282, 0.9981507844, -0.0575777523, 0.01948881581]
+  Pcl: [0.04244163461, -0.1026311762, -0.1341103956]

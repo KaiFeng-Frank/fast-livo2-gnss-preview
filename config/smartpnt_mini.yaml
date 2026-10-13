@@ -1,0 +1,244 @@
+# SmartPNT-MSF mini platform (Wuhan University; A80): Velodyne VLP-16 + HGuide I300 IMU + MER-131 global-shutter camera
+# (cam00) + the platform's built-in Septentrio mosaic-X5 receiver. Replay bag: tools/datasets/smartpnt/build_slim.py.
+# LIVO parameters: the upstream FAST-LIVO2 values for a 16-line spinning LiDAR (config/NTU_VIRAL.yaml: OS1-16, point_filter_num 3,
+# blind 1.0, beam_err 0.01) with the IMU and camera entries of config/m3dgr_avia.yaml (acc_cov 0.5, gyr_cov 0.3: upstream
+# defaults, never tuned; same keys and values for every arm). Platform-specific keys and their sources:
+#   common/{lid,imu,img}_topic        topics of the slim bag (/velodyne_points, /imu_raw, /cam00/image_raw[/compressed])
+#   extrin_calib/{extrinsic_R,extrinsic_T}  LiDAR -> I300 IMU: see the EXTRINSICS note below
+#   extrin_calib/{Rcl,Pcl}            LiDAR -> camera = T_cam_imu (Kalibr camchain-imucam-2024-06-26-02-19-12_0.yaml, /cam00 with /imu_raw)
+#                                     composed with the LiDAR -> IMU above (tools/datasets/smartpnt/extrinsics.py)
+#   time_offset/img_time_offset       +0.004 s, measured (see the time_offset block); NOT Kalibr's timeshift_cam_imu +0.0310331 s
+#   preprocess/lidar_type 2 (VELO16), scan_line 16: velodyne_handler; the slim bag's per-point `time` is microseconds from the first
+#                                     point (the unit that handler expects; tools/datasets/smartpnt/slim.py), stamp = first point
+#   gnss/frames: lever arm of the platform's GNSS antenna (Ant00) in the I300 IMU frame, from the dataset's ground-truth files
+#                                     (ROVE_02 minus I300 position files, 0.4 mm agreement; tools/datasets/smartpnt/gt_convert.py)
+#   gnss/imu_bridge                   I300 white-noise densities measured on the static start of Data01_20240707 (sample-difference std / sqrt 2,
+#                                     windows 5-15 s and 30-45 s: gyro 3.4-4.4e-5 rad/s/sqrt(Hz), accelerometer 0.5-1.1e-3 m/s^2/sqrt(Hz))
+# EXTRINSICS (LiDAR -> I300 IMU; mini_LiDAR.yaml lists LIO-SAM candidates without saying which IMU they belong to, so the data decide):
+#   extrinsic_R = [0 0 -1; 0 -1 0; -1 0 0] (LIO-SAM extrinsicRot, symmetric: R_imu_lidar = R_lidar_imu): LiDAR x forward, y left, z up
+#     against the I300's x down, y right, z back (Data_Description Table 2-3; the Kalibr camera chain agrees: the camera looks along -z).
+#     Tilt: on the static start of Data01_20240707 the accelerometer's up direction against the dominant ground plane of the scans (RANSAC)
+#     leaves 1.6 deg for this rotation, all four candidates with x_imu = -z_lidar lie within 0.9-1.8 deg (smartpnt/calib_check.py gravity).
+#     Yaw: LIO-only replays of the first 200 s of that sequence with each of the four candidates give nearly the same ATE (the platform
+#     moves slowly), but the travel direction in the estimated body frame is (0.001, -0.038, -0.999) only for this one - the other three
+#     put it along +z, +y and -y of the IMU frame - while the ground truth gives the forward direction (-0.020, -0.022, -0.9996) in the
+#     I300 frame for the same 170 s: yaw agrees to about 1 deg. Left as the exact axis permutation (no angle was fitted).
+#   extrinsic_T = [0.03411 0 0] = -R * extTrans, extTrans = [0 0 0.03411] (the last, uncommented translation of the file: the IMU origin
+#     in LiDAR axes); 3.4 cm, not observable in the data.
+#   LiDAR-IMU clock: LIO-only runs with lidar_time_offset -0.06 / -0.03 / 0 / +0.03 s give the largest mean effective-feature count at
+#     0 (4716 / 4727 / 4748 / 4736), so no offset is applied (sensitivity is low at 0.6 m/s).
+common:
+  img_topic: "/cam00/image_raw"
+  lid_topic: "/velodyne_points"
+  imu_topic: "/imu_raw"
+  img_en: 1
+  lidar_en: 1
+  ros_driver_bug_fix: false
+  img_compressed: true          # ref-R: subscribe/replay /cam00/image_raw/compressed and decode in-process (DESIGN §13)
+
+extrin_calib:
+  extrinsic_T: [0.03411, 0, 0]
+  extrinsic_R: [0, 0, -1, 0, -1, 0, -1, 0, 0]
+  # LiDAR -> camera (T_cam_imu of Kalibr composed with the LiDAR -> IMU above)
+  Rcl: [-0.05793685708, -0.9983048931, -0.005537246808, 0.01959245957, 0.004408477423, -0.9997983301, 0.9981279758, -0.05803366124, 0.01930383492]
+  Pcl: [0.04342763037, -0.1026222598, -0.1341040859]
+
+time_offset:
+  imu_time_offset: 0.0
+  # +0.004 s, measured on the bags themselves (tools/datasets/smartpnt/cam_imu_toff.py: the frame-to-frame image shift of the upper image
+  # against the gyroscope's rotation about the camera's horizontal axis, 1 ms steps; Data01_20240707 450-1000 s: +3.9 ms (bootstrap
+  # 3.7..4.0 ms, rho 0.94 against 0.85 at +31 ms), Data02_20240718 130-700 s: +0.5 ms (bootstrap -6..+4 ms)). Kalibr's timeshift_cam_imu of the
+  # 2024-06-26 calibration run, +0.0310331 s, does not hold for these recordings: with it the LIVO pose of Data02 freezes on the
+  # elevated road at 16 m/s (path of the estimate over the path of the ground truth 0.01 in 600-800 s; 31 ms are 0.5 m at that speed),
+  # with 0 the same window runs through (1.00) and scores like the LIO-only run.
+  img_time_offset: 0.004
+  exposure_time_init: 0.0
+
+preprocess:
+  point_filter_num: 3
+  filter_size_surf: 0.1
+  lidar_type: 2 # Velodyne VLP-16 (velodyne_handler)
+  scan_line: 16
+  blind: 1.0
+
+vio:
+  max_iterations: 5
+  outlier_threshold: 1000 # 78 100 156 #100 200 500 700 infinite
+  img_point_cov: 100 # 100 1000
+  patch_size: 8
+  patch_pyrimid_level: 4
+  normal_en: true
+  raycast_en: false
+  inverse_composition_en: false
+  exposure_estimate_en: true
+  inv_expo_cov: 0.1
+
+imu:
+  imu_en: true
+  imu_int_frame: 30
+  # Host b_a/g init covariance from the BMI088 zero-g offset: the BMI088 belongs to the Livox Avia, not to this IMU.
+  turnon_prior_en: false
+  acc_cov: 0.5 # 0.2
+  gyr_cov: 0.3 # 0.5
+  b_acc_cov: 0.0001 # 0.1
+  b_gyr_cov: 0.0001 # 0.1
+
+lio:
+  max_iterations: 5
+  dept_err: 0.02
+  beam_err: 0.01
+  min_eigen_value: 0.0025
+  # 1.0 m (upstream's own range for large outdoor scenes: config/MARS_LVIG.yaml 2.0, "1.0" in its comment; 0.5 is the indoor/Avia value this file
+  # started from). With 0.5 m the 16-line VLP-16 at 13-17 m/s puts too few points into a voxel for a plane and the LIO pose of Data02 freezes in
+  # the tunnel (estimated / true path 0.59, 0.017, 0.62 in the three 100 s windows from 1000 s, the same for LIO-only and LIVO); with 1.0 m
+  # the same windows run through (0.999, 0.990, 0.999) and the first 600 s score 134 m against 159 m.
+  voxel_size: 1.0
+  max_layer: 2
+  max_points_num: 50
+  layer_init_num: [5, 5, 5, 5, 5]
+
+local_map:
+  # true (upstream keys, upstream values): the LIO voxel map follows the sensor. Memory, not accuracy, decides: the whole-sequence map of
+  # a car at 16 m/s (Data02_20240718) holds 1.48 M voxels and 9.9 GiB after 600 s, 2.42 M voxels and 15.9 GiB after 880 s (the
+  # run_matrix container limit of 16 GiB killed the replay there); a sequence of 2000-4000 s would need 40-80 GiB, more than the host
+  # has. With the map sliding, 600 s need 2.9 GiB and 12 k voxels, and the first 300 s score 3.3 m (map kept: 3.0 m, LIO-only: 3.0 m).
+  # The visual map is not the cause (vio/grid_size 60 and 100 change the peak by less than 8 %, 9.5 / 9.2 against 9.9 GiB).
+  map_sliding_en: true
+  half_map_size: 100
+  sliding_thresh: 8
+
+uav:
+  imu_rate_odom: false
+  gravity_align_en: false
+
+publish:
+  dense_map_en: true
+  pub_effect_point_en: false
+  pub_plane_en: false
+  pub_scan_num: 1
+  blind_rgb_points: 0.0
+  use_sensor_time: true         # ref-R: odometry/path/mavros stamped with t_k instead of the wall clock (DESIGN §14)
+
+evo:
+  seq_name: "smartpnt"          # ref-R: overridden per run by the replay launch (arg seq)
+  pose_output_en: true          # ref-R: upstream evo file Log/result/<seq_name>.txt is a zero-channel gate input (DESIGN §13)
+
+pcd_save:
+  pcd_save_en: false
+  colmap_output_en: false # need to set interval = -1
+  filter_size_pcd: 0.15
+  interval: -1
+  # how many LiDAR frames saved in each pcd file;
+  # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+
+# ---- ref-R additions (DESIGN §14) ----
+replay:
+  enable: false                 # true only inside fastlivo_replay (set by the launch); the live node keeps its subscriptions
+  bag: ""
+  start_offset_s: 0.0
+  duration_s: -1.0
+  order: record
+  img_jitter_s: 0.0
+  seed: 0
+
+output:
+  dir: ""                       # "" = no writer files; set per run
+  traj_w: true
+  traj_n: true
+  state_trace: true
+  global_cloud: false
+  timing: true
+
+debug:
+  cov_csv: true
+
+# ---- GNSS tight coupling (P3; DESIGN §14 as amended). Every key is a field of livo_gnss::Config (gnss/include/livo_gnss/
+# config.hpp); the ROS glue refuses unknown keys and wrong types. Arms are overlays loaded after this file
+# (config/arms/*.yaml, AMENDMENTS A46). Per sequence the run script injects the data inputs:
+#   gnss/nav_rinex      the day's IGS BRDC file (fastlivo_replay --nav-rinex; A1/A38/A45: required with gnss_comm_ros1)
+#   gnss/time/calib_file the sequence's time calibration (tools/time_calib, A18)
+# Starred values (DESIGN §14 *), the L0 C/N0 masks and the receiver-std guards are the closed-form development-set
+# calibration of TEST_PLAN §3 (AMENDMENTS A58, P4; tools/calib); the tree is frozen with its sha256 in A58.
+gnss:
+  enable: false                 # false = zero channel: bit-identical to ref-R (U arm)
+  update_enable: true           # false = OBSERVE (bypass gate)
+  mode: tight                   # tight | loose_pvt | livgo_probe | livgo_probe_norej
+  update_slot: pre_lio          # pre_lio | post_vio (I13 only, A12)
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  source: gnss_comm_ros1        # gnss_comm_ros1 | rinex | ubx_stream
+  topics:
+    meas: /ublox_driver/range_meas
+    ephem: /ublox_driver/ephem
+    glo_ephem: /ublox_driver/glo_ephem
+    iono: /ublox_driver/iono_params           # diagnostics only (A38: not GPS Klobuchar)
+    pvt: /ublox_driver/receiver_pvt
+    tp: /ublox_driver/time_pulse_info         # counted only (A19)
+  rinex: {obs: "", nav: "", latency_s: 0.0}
+  nav_rinex: []                 # injected per sequence (see above)
+  systems: {gps: true, glo: true, gal: true, bds: true, qzs_as_gps: true, glo_psr: false, bds_geo: {use: true, psr_scale: 2.0}}
+  exclude_sats: []
+  frames:
+    lever_arm_frame: imu
+    lever_arm_xyz: [-0.118, 0.0, 0.120]       # Ant00 in the I300 IMU frame (x down, y right, z back)
+    lever_arm_sigma: 0.03
+    pivot_distance_m: 100.0
+    sigma_dov_rad: 1.5e-4
+    # Optional. 0 keeps the A61 prior. The BMI088 candidate hypot(atan(20 mg), 0.5 deg) = 0.021824
+    # was not adopted: see U15 LevelingBiasGateAndPrior.
+    sigma_lev_rad: 0.0
+    gnss_updates_gravity: true
+  time:
+    base: host                  # M3DGR: GnssMeasMsg has no header; the estimator runs on the host-stamped sensors
+    leap: auto
+    offset_s: 0.0               # the sequence's calib_file overrides offset/drift/sigma (A18)
+    drift_ppm: 0.0
+    t_ref_gpst_s: 0.0
+    calib_file: ""              # injected per sequence (see above)
+    sigma_toff_s: 0.05
+    estimate_online: false
+    td_rw_s2_per_s: 1.0e-8
+    max_bridge_s: 0.3
+    bridge_ring_cycles: 4
+    toff_monitor: {enable: true, window_s: 30.0, min_abs_s: 0.005, n_sigma: 3.0}
+  imu_bridge: {acc_n: 0.001, gyr_n: 4.5e-05}  # HGuide I300 (measured, see the header)
+  masks:
+    el_deg: 10.0
+    cn0_psr: 20.0               # A58 (P4 calibration): change points of the >4-sigma tail rate over C/N0 (pseudorange,
+    cn0_dopp: 12.0              # Doppler); carrier: the lowest C/N0 with TDCP rows on the development set (no tail rise)
+    cn0_cp: 25.0
+    track_psr: 10
+    track_cp: 3
+    eph_age_s: {G: 7200.0, E: 7200.0, C: 3600.0, R: 1800.0, J: 7200.0}
+    max_psr_std_m: 41.0         # A58: no tail change point over the receiver std above the C/N0 masks, so the std masks
+    max_dopp_std_hz: 16.4       # stay gross-error guards above the largest value on the development set (40.96 m, 16.384 Hz)
+    max_cp_std_m: 0.02
+    psr_min_m: 1.9e+7
+    psr_max_m: 4.5e+7
+    max_range_rate_mps: 2000.0
+  noise:
+    psr: {sigma0_m: 0.773, cn0_ref: 45.0, k_std: 0.0, tau_s: 33.1, decim_s: 1.0, err_brdci: 0.5,
+          sys_factor: {G: 1.0, E: 1.0, C: 1.0, R: 1.5, J: 1.0}}
+    dopp: {sigma0_mps: 0.127, tau_s: 0.047, exclusive_with_tdcp: true}
+    tdcp: {sigma0_m: 0.004, interval_s: 0.5, sigma_rate_mps: 0.002, sigma_windup_m: 0.002, max_span_s: 1.5}
+    pvt: {tau_pos_s: 21.6, tau_vel_s: 0.52, decim_s: 1.0, scale: 0.35}
+    scale: {psr: 0.0178, dopp: 0.2118, tdcp: 0.882}
+  process:
+    clock: {S_b: 1.0e-3, S_d: 1.43e-2, S_b_min_windup: true}
+    isb_q: 1.0e-4
+    frame: {q_tilt_per_m: 4.8378025259125282e-08, q_yaw_per_m: 2.78e-8, q_yaw_per_rad: 0.0, q_th_per_m: 4.58e-5, q_tv_per_m: 0.00055234912699583371, q_time: 0.0}
+  init: {min_livo_frames: 50, min_sats: 5, max_gdop: 5.0, min_epochs: 30, min_window_s: 10.0, min_hspeed_mps: 0.5,
+         min_moving_epochs: 30, min_path_m: 5.0, yaw_sigma_max_deg: 3.0, spp_sigma_floor_m: 3.0, nlos_cn0_margin_db: 8.0}
+  rejection: {alpha_w: 1.0e-3, alpha_nis: 1.0e-3, max_reject_frac: 0.5, min_meas: {psr: 1, dopp: 1, tdcp: 2},
+              post_check: true, core_step_max_m: 0.05, clock_jump_km: 1.0, lockout_epochs: 20}
+  slip: {lli: true, half_cycle: true, max_gap_s: 1.5, dopp_tol_cyc: 0.5, jerk_max: 1.0, innov_abs_m: 0.05, gf_tol_m: 0.05}
+  integrity:
+    velocity_alarm: {enable: true, alpha: 1.0e-3, min_err_mps: 0.2, n_consec: 5, n_clear: 10}
+    heading: {enable: true, min_speed: 0.5, n_consec: 20, min_err_deg: 5.0}
+    degeneracy: {lambda_enter: 400.0, lambda_exit: 800.0, window: 10, floor_enable: false, sigma_floor_m: 0.05}
+  iterate: {yaw_sigma_deg: 2.0, dyaw_deg: 0.1, max_iter: 3, reacq_epochs: 5}
+  outage: {outage_s: 1.0, recover_min_sats: 4, recover_settle_s: 1.0, reinit_after_s: 60.0, reinit_sigma_t_m: 10.0, reinit_sigma_psi_rad: 0.1}
+  ablation: {frame_fixed_after_init: false, tdcp_fixed_anchor: false, disable_l4_l5: false}
+  output: {frame_id: enu, smooth_trans_mps: 0.2, smooth_yaw_dps: 2.0, sat_csv: false}
+  ephem:
+    ura_semantics: metres       # A16/A45: judged by the ingest audit (E4) on Grass01/02, Dark01, Outdoor01
+    gal_prefer_inav: true

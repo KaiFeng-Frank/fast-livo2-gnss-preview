@@ -1,0 +1,50 @@
+# LIVGO-literal (AMENDMENTS A80 section 3 and 4, implementation record "A80 实现记录(LIVGO-literal)"), development-set arm, not an
+# evaluation arm. The paper's method as written (arXiv:2606.19190v2), on the A75 machinery (every key below is a gnss/* key or a
+# livgo/* switch; nothing else differs from LIVGO-v2.yaml except what is listed). LIVGO-literal-paper.yaml is the same arm with the
+# paper's flat row strength.
+#   livgo.paper_init true         eq. (2)-(3) least squares: full rotation, translation and lever (damped to the configured one)
+#   livgo.init_travel_m 50        the first activation waits for 50 m of horizontal travel; the least squares then runs once on every
+#                                 synchronous epoch collected before (SPP position + host pose), the author's FAST-LIVO2-RTK rule
+#   livgo.init_tilt_sigma_max_deg 0.2   pre-registered rule: formal tilt sigma above 0.2 deg -> tilt from the host gravity (phi = 0),
+#                                 least-squares yaw, translation and lever kept; events.log (ACTIVATE) names the branch and the sigma
+#   livgo.frame_exact + freeze_yaw  tilt, yaw and translation exact constants after the solve (nothing of the frame is a state)
+#   livgo.cn0_hard true           C/N0 masks of the pseudorange, Doppler and carrier rows = cn0_min_dbhz (35), elevation = el_min_deg (15)
+#   livgo.primary_only true       main frequency of each system only (an addition to the listed items, see the record)
+#   livgo.tdcp_raim_both_ends true  a satellite the epoch's SPP residual test rejected opens no TDCP pair (the closing end already refuses it): RAIM-rejected
+#                                 satellites are no observation at either end of a pair (A81 section 1)
+#   livgo.dtw_online true         DTW of the speed magnitudes onto the GNSS time map
+#   livgo.dtw_at_init true        (A82, replaces A80's "after dtw_min_epochs epochs" trigger; dtw_window_s and dtw_min_epochs are no longer read) the
+#                                 DTW is made once, when the 50 m travel gate opens, on every synchronous epoch of the frame least squares' history
+#                                 (grid dtw_grid_s 0.1 s, band 2 s), right before that least squares. Its lag is taken only if the author's
+#                                 acceptance test passes (both series >= 20 samples and std >= 0.05 m/s; score at the lag > 0.25 and more than 0.05
+#                                 above the zero-lag score; |lag| <= 10 s), else the offset stays 0; the history's host poses are re-paired at the
+#                                 compensated times. events.log (ACTIVATE) records lag, both scores, both deviations, samples and the decision
+#   livgo.single_init true        (A82) the first ACTIVATE stands: REINIT_YAW, the outage/L6/L7 re-initialisation and the H2 fallback are suppressed
+#                                 and counted (event REINIT_SUPPRESSED); the frame is frozen until the end of the run
+#   noise.tdcp / noise.dopp       fixed-anchor TDCP between consecutive receiver epochs (0.1 s pairs, chained), Doppler and TDCP on the
+#                                 same satellites (no end-point exclusion)
+#   update_slot post_vio          GNSS after LIVO, as in the paper
+#   livgo.lambda_source lio       dual mode on the LiDAR translation Hessian block
+#   livgo.lambda_th 0             Mode A always (collection setting): lambda_th is the 5th percentile of the window means on the
+#                                 development set, 30 s after activation, set once the arm has collection runs (A80 section 4)
+#   livgo.noise_mode model        the A58 row noise model (the paper-strength variant is LIVGO-literal-paper)
+#   livgo.tdcp_gain_log true      observer (A75 revision 1): livgo_tdcp_gain.csv; nothing in the filter reads it
+# Pseudorange stays in the SPP/RAIM path (the facade keeps it out of the filter); RAIM = the SPP residual test, whose rejected satellites
+# are out of the Doppler and TDCP rows too. Chi-square alpha stays rejection.alpha_nis (1e-3).
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: post_vio
+  use: {psr: false, dopp: true, tdcp: true, pvt_vel: false}
+  masks: {el_deg: 15.0}
+  noise:
+    dopp: {project_tilt: false, consider_tilt: false, exclusive_with_tdcp: false}
+    tdcp: {interval_s: 0.1, max_span_s: 0.15, chain_pairs: true, phase_states: true}
+  ablation: {frame_fixed_after_init: true, tdcp_fixed_anchor: true, disable_l4_l5: false}
+  livgo: {enable: true, paper_init: true, init_travel_m: 50.0, init_tilt_sigma_max_deg: 0.2,
+          frame_exact: true, freeze_yaw: true,
+          cn0_hard: true, cn0_min_dbhz: 35.0, el_min_deg: 15.0, primary_only: true, tdcp_raim_both_ends: true,
+          dtw_online: true, dtw_at_init: true, dtw_grid_s: 0.1, single_init: true,
+          lambda_source: lio, lambda_th: 0.0, noise_mode: model,
+          tdcp_gain_log: true}

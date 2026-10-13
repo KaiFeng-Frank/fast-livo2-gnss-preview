@@ -1,0 +1,12 @@
+# Diagnostic arm T-proj-consider (AMENDMENTS A70; development set only, not an evaluation arm): arm T with the A70
+# projection of the Doppler rows off the tilt and, on top, the A66 consider entry — the configuration of the A67
+# diagnostic build D2 (wt/a67-dproj-strict: A66's consider default plus diag_dproj.diff). On the A70 build it must
+# reproduce the A67 D2 runs (build d8113e25) byte for byte wherever every epoch keeps at least three accepted Doppler rows
+# (D2 left fewer than three unprojected; the main line projects them, AMENDMENTS A70).
+gnss:
+  enable: true
+  update_enable: true
+  mode: tight
+  update_slot: pre_lio
+  use: {psr: true, dopp: true, tdcp: true, pvt_vel: true}
+  noise: {dopp: {project_tilt: true, consider_tilt: true}}

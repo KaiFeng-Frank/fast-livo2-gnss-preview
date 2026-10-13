@@ -1,0 +1,4 @@
+# probe overlay: LiDAR -> I300 extrinsic candidate A = the configured one (LIO-SAM extrinsicRot of mini_LiDAR.yaml, symmetric)
+extrin_calib:
+  extrinsic_R: [0, 0, -1, 0, -1, 0, -1, 0, 0]
+  extrinsic_T: [0.03411, 0, 0]
